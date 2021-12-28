@@ -10,6 +10,7 @@ namespace DotnetSpider.DataFlow
 {
 	/// <summary>
 	/// 数据流处理器上下文
+	/// Data stream processor context
 	/// </summary>
 	public class DataFlowContext : IDisposable
 	{

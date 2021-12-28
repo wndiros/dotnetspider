@@ -17,6 +17,7 @@ namespace DotnetSpider.DataFlow.Parser
 
 		/// <summary>
 		/// 值是否可以为空, 如果不能为空但解析到的值为空时，当前对象被抛弃
+		/// Whether the value can be empty, if it cannot be empty but the parsed value is empty, the current object is discarded
 		/// </summary>
 		internal bool NotNull { get; set; }
 
@@ -30,8 +31,8 @@ namespace DotnetSpider.DataFlow.Parser
 		/// <summary>
 		/// 构造方法
 		/// </summary>
-		/// <param name="type">选择器类型</param>
-		/// <param name="expression">表达式</param>
+		/// <param name="type">Selector type</param>
+		/// <param name="expression">expression</param>
 		public ValueSelector(string expression, SelectorType type = SelectorType.XPath)
 			: base(expression, type)
 		{
