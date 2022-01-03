@@ -67,8 +67,9 @@ namespace DotnetSpider.DataFlow.Storage
                 _tableMetadata.Value.Columns.Add(property.Name, column);
             }
 
-            // 如果未设置主键, 但实体中有名为 Id 的属性, 则默认把 Id 作为主键
-            if (_tableMetadata.Value.Primary == null || _tableMetadata.Value.Primary.Count == 0)
+			// 如果未设置主键, 但实体中有名为 Id 的属性, 则默认把 Id 作为主键
+			//If the primary key is not set, but there is an attribute named Id in the entity, then Id will be used as the primary key by default
+			if (_tableMetadata.Value.Primary == null || _tableMetadata.Value.Primary.Count == 0)
             {
                 var primary = properties.FirstOrDefault(x => x.Name.ToLower() == "id");
                 if (primary != null)

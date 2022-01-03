@@ -14,6 +14,7 @@ namespace DotnetSpider.DataFlow.Storage
 
 		/// <summary>
 		/// 属性反射，用于设置解析值到实体对象
+		/// Property reflection, used to set the analytic value to the entity object
 		/// </summary>
 		public PropertyInfo PropertyInfo { get; set; }
 	}

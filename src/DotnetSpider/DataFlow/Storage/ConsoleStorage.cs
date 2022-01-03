@@ -8,6 +8,7 @@ namespace DotnetSpider.DataFlow
 {
 	/// <summary>
 	/// 控制台打印解析结果(所有解析结果)
+	/// The console prints the results of the analysis  (all analysis results)
 	/// </summary>
 	public class ConsoleStorage : DataFlowBase
 	{
@@ -25,7 +26,8 @@ namespace DotnetSpider.DataFlow
 		{
 			if (IsNullOrEmpty(context))
 			{
-				Logger.LogWarning("数据流上下文不包含解析结果");
+				//Logger.LogWarning("数据流上下文不包含解析结果");
+				Logger.LogWarning("The data flow context does not contain the analysis result");
 				return Task.CompletedTask;
 			}
 

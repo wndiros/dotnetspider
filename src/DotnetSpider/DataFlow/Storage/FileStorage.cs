@@ -9,7 +9,9 @@ namespace DotnetSpider.DataFlow
 {
 	/// <summary>
 	/// 文件保存解析结果(所有解析结果)
+	/// File save analysis results (all analysis results)
 	/// 保存路径: [当前程序运行目录]/files/[任务标识]/[request.hash].data
+	/// Save path: [Current program running directory]/files/[Task ID]/[request.hash].data
 	/// </summary>
 	public class FileStorage : FileStorageBase
 	{
@@ -22,7 +24,7 @@ namespace DotnetSpider.DataFlow
 		{
 			if (IsNullOrEmpty(context))
 			{
-				Logger.LogWarning("数据流上下文不包含解析结果");
+				Logger.LogWarning("The data flow context does not contain the analysis result");
 				return;
 			}
 

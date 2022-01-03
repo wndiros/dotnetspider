@@ -4,13 +4,27 @@ using DotnetSpider.DataFlow;
 using DotnetSpider.DataFlow.Parser;
 using DotnetSpider.Http;
 using DotnetSpider.Infrastructure;
+using DotnetSpider.Scheduler;
+using DotnetSpider.Scheduler.Component;
+using DotnetSpider.Downloader;
+using DotnetSpider.Selector;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Hosting;
+using Serilog;
 
 namespace DotnetSpider.Sample.samples
 {
 	public class GithubSpider : Spider
 	{
+		public static async Task RunAsync()
+		{
+			var builder = Builder.CreateDefaultBuilder<GithubSpider>();
+			builder.UseSerilog();
+			builder.UseDownloader<HttpClientDownloader>();
+			builder.UseQueueDistinctBfsScheduler<HashSetDuplicateRemover>();
+			await builder.Build().RunAsync();
+		}
 		public GithubSpider(IOptions<SpiderOptions> options, DependenceServices services, ILogger<Spider> logger) :
 			base(options, services, logger)
 		{
@@ -26,6 +40,7 @@ namespace DotnetSpider.Sample.samples
 			await AddRequestsAsync(new Request("https://github.com/zlzforever")
 			{
 				// 请求超时 10 秒
+				//Request timeout 10 seconds
 				Timeout = 10000
 			});
 		}
@@ -46,6 +61,7 @@ namespace DotnetSpider.Sample.samples
 			{
 				var selectable = context.Selectable;
 				// 解析数据
+				//Analytical data
 				var author = selectable.XPath("//span[@class='p-name vcard-fullname d-block overflow-hidden']")
 					?.Value;
 				var name = selectable.XPath("//span[@class='p-nickname vcard-username d-block']")

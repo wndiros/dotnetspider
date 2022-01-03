@@ -24,10 +24,11 @@ namespace DotnetSpider.DataFlow.Storage
 
 		/// <summary>
 		/// 构造方法
+		/// Constructer
 		/// </summary>
 		/// <param name="database">数据库名</param>
 		/// <param name="table">表名</param>
-		/// <param name="tablePostfix">表名后缀</param>
+		/// <param name="tablePostfix">表名后缀 (Table name suffix) </param>
 		public Schema(string database, string table, TablePostfix tablePostfix = TablePostfix.None)
 		{
 			Database = database;

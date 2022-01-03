@@ -32,13 +32,14 @@ namespace DotnetSpider.Sample.samples
 
 		protected override SpiderId GenerateSpiderId()
 		{
-			return new(ObjectId.CreateId().ToString(), "Github 图片");
+			return new(ObjectId.CreateId().ToString(), "Github picture");
 		}
 
 		protected override async Task InitializeAsync(CancellationToken stoppingToken = default)
 		{
 			await AddRequestsAsync(
-				new Request("https://www.cnblogs.com/images/logo.svg?v=R9M0WmLAIPVydmdzE2keuvnjl-bPR7_35oHqtiBzGsM"));
+				//new Request("https://www.cnblogs.com/images/logo.svg?v=R9M0WmLAIPVydmdzE2keuvnjl-bPR7_35oHqtiBzGsM"));
+				new Request("https://springest.de"));
 			AddDataFlow(new ImageStorage());
 		}
 	}
