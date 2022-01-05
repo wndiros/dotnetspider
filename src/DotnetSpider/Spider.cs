@@ -195,7 +195,9 @@ namespace DotnetSpider
 				request.RequestedTimes += 1;
 
 				// 1. 请求次数超过限制则跳过，并添加失败记录
+				// 1. If the number of requests exceeds the limit, skip it and add a failure record
 				// 2. 默认构造的请求次数为 0， 并且不允许用户更改，因此可以保证数据安全性
+				// 2. The number of requests constructed by default is 0, and users are not allowed to change it, so data security can be guaranteed
 				if (request.RequestedTimes > Options.RetriedTimes)
 				{
 					await _services.StatisticsClient.IncreaseFailureAsync(SpiderId.Id);
