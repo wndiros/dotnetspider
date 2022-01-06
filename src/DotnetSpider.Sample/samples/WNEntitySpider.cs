@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using DotnetSpider.DataFlow;
 using DotnetSpider.DataFlow.Parser;
 using DotnetSpider.DataFlow.Parser.Formatters;
 using DotnetSpider.DataFlow.Storage;
@@ -73,44 +71,6 @@ namespace DotnetSpider.Sample.samples
 			return new(ObjectId.CreateId().ToString(), "Categories");
 		}
 
-		//protected class ListNewsParser : DataParser
-		//{
-		//	public override Task InitializeAsync()
-		//	{
-		//		// AddRequiredValidator("news\\.cnblogs\\.com/n/page");
-		//		AddRequiredValidator((request =>
-		//		{
-		//			var host = request.RequestUri.Host;
-		//			var regex = host + "/$";
-		//			return Regex.IsMatch(request.RequestUri.ToString(), regex);
-		//		}));
-		//		// if you want to collect every pages
-		//		// AddFollowRequestQuerier(Selectors.XPath(".//div[@class='pager']"));
-		//		return Task.CompletedTask;
-		//	}
-
-		//	protected override Task ParseAsync(DataFlowContext context)
-		//	{
-		//		var newsList = context.Selectable.SelectList(Selectors.XPath(".//div[@class='news_block']"));
-		//		foreach (var news in newsList)
-		//		{
-		//			var title = news.Select(Selectors.XPath(".//h2[@class='news_entry']"))?.Value;
-		//			var url = news.Select(Selectors.XPath(".//h2[@class='news_entry']/a/@href"))?.Value;
-					
-
-		//			if (!string.IsNullOrWhiteSpace(url))
-		//			{
-		//				var request = context.CreateNewRequest(new Uri(url));
-		//				request.Properties.Add("title", title);
-		//				request.Properties.Add("url", url);					
-
-		//				context.AddFollowRequests(request);
-		//			}
-		//		}
-
-		//		return Task.CompletedTask;
-		//	}
-		//}
 
 		/// <summary>
 		/// docker run --name mariadbDSpiderDemo -p 3306:3306 -volume -v mariadbtest:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=clamawu! -d mariadb
@@ -119,28 +79,25 @@ namespace DotnetSpider.Sample.samples
 		[Schema("Springest", "Categories")]
 		[EntitySelector(Expression = ".//li[@class='category-list__item']", Type = SelectorType.XPath)]		
 		//[GlobalValueSelector(Expression = ".//a[@class='category-list__title-link']/@href", Name = "URL", Type = SelectorType.XPath)]
-		//[GlobalValueSelector(Expression = "//a[@class='category-list__title-link']//text()", Name = "Title", Type = SelectorType.XPath)]
+		//[GlobalValueSelector(Expression = ".//a[@class='category-list__title-link']//text()", Name = "Title", Type = SelectorType.XPath)]
 		//[FollowRequestSelector(Expressions = new[] { "//div[@class='pager']" })]
 		public class springestcategories : EntityBase<springestcategories>
-		{
+		{ 
 
 			//
 			/// <summary>
 			/// Category Data			
 			/// </summary>
-			///
-
-			public int Id { get; set; }
-
+			/// 
+			
 			[Required]
 			//[ValueSelector(Expression = ".//h2[@class='news_entry']/a/@href")]
-			[ValueSelector(Expression = "//a[@class='category-list__title-link']/@href")]
-			//[ValueSelector(Expression = "Title", Type = SelectorType.Environment)]
+			[ValueSelector(Expression = "URL", Type = SelectorType.Environment)]
 			public string url { get; set; }
 
 			[Required]
-			//[ValueSelector(Expression = "Title", Type = SelectorType.Environment)]
-			[ValueSelector(Expression = ".//a[@class='category-list__title-link']//text()")]
+			//[ValueSelector(Expression = ".//h2[@class='news_entry']/a/@href")]
+			[ValueSelector(Expression = "Title", Type = SelectorType.Environment)]
 			public string page_title { get; set; }
 
 			[Required]
