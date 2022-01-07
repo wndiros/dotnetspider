@@ -78,26 +78,29 @@ namespace DotnetSpider.Sample.samples
 
 		[Schema("Springest", "Categories")]
 		[EntitySelector(Expression = ".//li[@class='category-list__item']", Type = SelectorType.XPath)]		
-		//[GlobalValueSelector(Expression = ".//a[@class='category-list__title-link']/@href", Name = "URL", Type = SelectorType.XPath)]
+		//[GlobalValueSelector(Expression = "//a[@class='category-list__title-link']/@href", Name = "URL", Type = SelectorType.XPath)]
 		//[GlobalValueSelector(Expression = ".//a[@class='category-list__title-link']//text()", Name = "Title", Type = SelectorType.XPath)]
 		//[FollowRequestSelector(Expressions = new[] { "//div[@class='pager']" })]
 		public class springestcategories : EntityBase<springestcategories>
-		{ 
+		{
 
 			//
 			/// <summary>
 			/// Category Data			
 			/// </summary>
-			/// 
-			
-			[Required]
-			//[ValueSelector(Expression = ".//h2[@class='news_entry']/a/@href")]
-			[ValueSelector(Expression = "URL", Type = SelectorType.Environment)]
-			public string url { get; set; }
+			///
+
+			public int Id { get; set; }
 
 			[Required]
 			//[ValueSelector(Expression = ".//h2[@class='news_entry']/a/@href")]
-			[ValueSelector(Expression = "Title", Type = SelectorType.Environment)]
+			[ValueSelector(Expression = "//a[@class='category-list__title-link']/@href")]
+			//[ValueSelector(Expression = "URL", Type = SelectorType.Environment)]
+			public string url { get; set; }
+
+			[Required]
+			[ValueSelector(Expression = ".//a[@class='category-list__title-link']//text()")]
+			//[ValueSelector(Expression = "Title", Type = SelectorType.Environment)]
 			public string page_title { get; set; }
 
 			[Required]

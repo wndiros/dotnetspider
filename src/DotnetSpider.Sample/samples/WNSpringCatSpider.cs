@@ -22,11 +22,11 @@ using Serilog;
 
 namespace DotnetSpider.Sample.samples
 {
-	public class WNEntitySpider : Spider
+	public class WNSpringCatSpider : Spider
 	{
 		public static async Task RunAsync()
 		{
-			var builder = Builder.CreateDefaultBuilder<WNEntitySpider>(options =>
+			var builder = Builder.CreateDefaultBuilder<WNSpringCatSpider>(options =>
 			{
 				options.Speed = 1;
 			});
@@ -39,7 +39,7 @@ namespace DotnetSpider.Sample.samples
 
 		public static async Task RunMySqlQueueAsync()
 		{
-			var builder = Builder.CreateDefaultBuilder<WNEntitySpider>(options =>
+			var builder = Builder.CreateDefaultBuilder<WNSpringCatSpider>(options =>
 			{
 				options.Speed = 1;
 			});
@@ -53,7 +53,7 @@ namespace DotnetSpider.Sample.samples
 			await builder.Build().RunAsync();
 		}
 
-		public WNEntitySpider(IOptions<SpiderOptions> options, DependenceServices services,
+		public WNSpringCatSpider(IOptions<SpiderOptions> options, DependenceServices services,
 			ILogger<Spider> logger) : base(
 			options, services, logger)
 		{
@@ -61,11 +61,13 @@ namespace DotnetSpider.Sample.samples
 
 		protected override async Task InitializeAsync(CancellationToken stoppingToken = default)
 		{
-			AddDataFlow(new DataParser<springestcategories>());
+			
+			AddDataFlow(new SpringCatParser()); 
+			//AddDataFlow(new EntityParser());
 			AddDataFlow(GetDefaultStorage());
 			await AddRequestsAsync(
 				new Request(
-					"https://springest.de", new Dictionary<string, object> {{ "website", "Springest"}}));
+					"https://springest.de", new Dictionary<string, object> { { "website", "Springest" } }));
 		}
 
 		protected override SpiderId GenerateSpiderId()
@@ -73,11 +75,12 @@ namespace DotnetSpider.Sample.samples
 			return new(ObjectId.CreateId().ToString(), "Categories");
 		}
 
+
 		protected class SpringCatParser : DataParser
 		{
 			public override Task InitializeAsync()
 			{
-				// AddRequiredValidator("news\\.cnblogs\\.com/n/page");
+
 				AddRequiredValidator((request =>
 				{
 					var host = request.RequestUri.Host;
@@ -112,40 +115,41 @@ namespace DotnetSpider.Sample.samples
 			}
 		}
 
-		//protected class NewsParser : DataParser
-		//{
-		//	public override Task InitializeAsync()
-		//	{
-		//		AddRequiredValidator("news\\.cnblogs\\.com/n/\\d+");
-		//		return Task.CompletedTask;
-		//	}
+		protected class EntityParser : DataParser
+		{
+			public override Task InitializeAsync()
+			{
+				// AddRequiredValidator("www\\.springest\\.de/n/\\d+");
+				return Task.CompletedTask;
+			}
 
-		//	protected override Task ParseAsync(DataFlowContext context)
-		//	{
-		//		var typeName = typeof(springestcategories).FullName;
-		//		context.AddData(typeName,
-		//			//new springestcategories
-		//			//{
-		//			//	//url = context.Request.RequestUri.ToString(),
-		//			//	//page_title = context.Request.Properties["title"]?.ToString()?.Trim(),
-		//			//	//Summary = context.Request.Properties["summary"]?.ToString()?.Trim(),
-		//			//	//Views = int.Parse(context.Request.Properties["views"]?.ToString()?.Trim() ?? "0"),
-		//			//	//Content = context.Selectable.Select(Selectors.XPath(".//div[@id='news_body']")).Value
-		//			//		?.Trim()
-		//			//});
-		//		return Task.CompletedTask;
-		//	}
-		//}
-		/// <summary>
-		/// docker run --name mariadbDSpiderDemo -p 3306:3306 -volume -v mariadbtest:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=clamawu! -d mariadb
-		/// </summary>
+			protected override Task ParseAsync(DataFlowContext context)
+			{
+				var typeName = typeof(CategoriesEntity).FullName;
+				context.AddData(typeName,
+					new CategoriesEntity
+					{
+						url = context.Request.RequestUri.ToString(),
+						page_title = context.Request.Properties["title"]?.ToString()?.Trim()
+							//Summary = context.Request.Properties["summary"]?.ToString()?.Trim(),
+							//Views = int.Parse(context.Request.Properties["views"]?.ToString()?.Trim() ?? "0"),
+							//Content = context.Selectable.Select(Selectors.XPath(".//div[@id='news_body']")).Value
+							?.Trim()
+					});
+				return Task.CompletedTask;
+			}
+		}
+	
+	/// <summary>
+	/// docker run --name mariadbDSpiderDemo -p 3306:3306 -volume -v mariadbtest:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=clamawu! -d mariadb
+	/// </summary>
 
-		[Schema("Springest", "Categories")]
-		[EntitySelector(Expression = ".//li[@class='category-list__item']", Type = SelectorType.XPath)]		
+	[Schema("Springest", "Categories")]
+		[EntitySelector(Expression = ".//li[@class='category-list__item']", Type = SelectorType.XPath)]
 		//[GlobalValueSelector(Expression = ".//a[@class='category-list__title-link']/@href", Name = "URL", Type = SelectorType.XPath)]
 		//[GlobalValueSelector(Expression = "//a[@class='category-list__title-link']//text()", Name = "Title", Type = SelectorType.XPath)]
 		//[FollowRequestSelector(Expressions = new[] { "//div[@class='pager']" })]
-		public class springestcategories : EntityBase<springestcategories>
+		public class CategoriesEntity : EntityBase<CategoriesEntity>
 		{
 
 			//

@@ -32,6 +32,7 @@ namespace DotnetSpider.Sample
 			// await GithubSpider.RunAsync();
 			//await ImageSpider.RunAsync();
 			await WNEntitySpider.RunAsync();
+			//await WNSpringCatSpider.RunAsync();
 			//await EntitySpider.RunAsync();
 			Console.WriteLine("Bye!");
 		}
