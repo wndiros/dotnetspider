@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 namespace DotnetSpider.DataFlow.Parser
 {
 	/// <summary>
-	/// 实体解析器
+	/// Entity-Resolver
 	/// </summary>
 	/// <typeparam name="TEntity"></typeparam>
 	public class DataParser<TEntity> : DataParser where TEntity : EntityBase<TEntity>, new()
@@ -151,7 +151,7 @@ namespace DotnetSpider.DataFlow.Parser
 						}
 						else
 						{
-							Logger.LogWarning($"解析到空数据，类型: {Model.TypeName}");
+							Logger.LogWarning($"parsing to empty data, type: {Model.TypeName}");
 						}
 
 						index++;
@@ -167,7 +167,7 @@ namespace DotnetSpider.DataFlow.Parser
 				}
 				else
 				{
-					Logger.LogWarning($"解析到空数据，类型: {Model.TypeName}");
+					Logger.LogWarning($"The data flow context does not contain entity resolution results: {Model.TypeName}");
 				}
 			}
 

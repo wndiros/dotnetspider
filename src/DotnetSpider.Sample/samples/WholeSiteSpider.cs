@@ -38,13 +38,13 @@ namespace DotnetSpider.Sample.samples
 		protected override async Task InitializeAsync(CancellationToken stoppingToken)
 		{
 			AddDataFlow(new MyDataParser());
-			AddDataFlow(new ConsoleStorage()); // 控制台打印采集结果
-			await AddRequestsAsync("http://www.cnblogs.com/"); // 设置起始链接
+			AddDataFlow(new ConsoleStorage()); // The console prints the collection results
+			await AddRequestsAsync("http://www.cnblogs.com/"); // set start link
 		}
 
 		protected override SpiderId GenerateSpiderId()
 		{
-			return new(ObjectId.CreateId().ToString(), "博客园全站采集");
+			return new(ObjectId.CreateId().ToString(), "Blog Park site-wide collection");
 		}
 
 		class MyDataParser : DataParser

@@ -13,37 +13,37 @@ namespace DotnetSpider.DataFlow.Parser
 	public class Model<T> where T : EntityBase<T>, new()
 	{
 		/// <summary>
-		/// 实体的类型名称
+		/// the type name of the entity
 		/// </summary>
 		public string TypeName { get; }
 
 		/// <summary>
-		/// 数据模型的选择器
+		/// selector for data model
 		/// </summary>
 		public Selector Selector { get; }
 
 		/// <summary>
-		/// 从最终解析到的结果中取前 Take 个实体
+		/// Take the front from the final parsed result Take entities
 		/// </summary>
 		public int Take { get; }
 
 		/// <summary>
-		/// 设置 Take 的方向, 默认是从头部取
+		/// Set the direction of the Take, the default is to take from the head
 		/// </summary>
 		public bool TakeByDescending { get; }
 
 		/// <summary>
-		/// 爬虫实体定义的数据库列信息
+		/// Database column information defined by the crawler entity
 		/// </summary>
 		public HashSet<ValueSelector> ValueSelectors { get; }
 
 		/// <summary>
-		/// 目标链接的选择器
+		/// target link selector
 		/// </summary>
 		public HashSet<FollowRequestSelector> FollowRequestSelectors { get; }
 
 		/// <summary>
-		/// 共享值的选择器
+		/// selector for shared values
 		/// </summary>
 		public HashSet<GlobalValueSelector> GlobalValueSelectors { get; }
 

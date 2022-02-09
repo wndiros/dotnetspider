@@ -14,7 +14,7 @@ using Newtonsoft.Json.Linq;
 namespace DotnetSpider.DataFlow.Parser
 {
 	/// <summary>
-	/// 数据解析器
+	/// data parser
 	/// </summary>
 	public abstract class DataParser : DataFlowBase
 	{
@@ -22,12 +22,12 @@ namespace DotnetSpider.DataFlow.Parser
 		private readonly List<Func<Request, bool>> _requiredValidator;
 
 		/// <summary>
-		/// 选择器的生成方法
+		/// How to generate selectors
 		/// </summary>
 		public Func<DataFlowContext, ISelectable> SelectableBuilder { get; protected set; }
 
 		/// <summary>
-		/// 数据解析
+		/// data analysis
 		/// </summary>
 		/// <param name="context">处理上下文</param>
 		/// <returns></returns>
@@ -107,9 +107,9 @@ namespace DotnetSpider.DataFlow.Parser
 		}
 
 		/// <summary>
-		/// 数据解析
+		/// data analysis
 		/// </summary>
-		/// <param name="context">处理上下文</param>
+		/// <param name="context">processing context</param>
 		/// <returns></returns>
 		public override async Task HandleAsync(DataFlowContext context)
 		{

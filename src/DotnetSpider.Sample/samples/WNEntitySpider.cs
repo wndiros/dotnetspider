@@ -27,6 +27,7 @@ namespace DotnetSpider.Sample.samples
 			var builder = Builder.CreateDefaultBuilder<WNEntitySpider>(options =>
 			{
 				options.Speed = 1;
+				options.Depth = 2;
 			});
 			builder.UseDownloader<HttpClientDownloader>();
 			builder.UseSerilog();
@@ -63,7 +64,7 @@ namespace DotnetSpider.Sample.samples
 			AddDataFlow(GetDefaultStorage());
 			await AddRequestsAsync(
 				new Request(
-					"https://springest.de", new Dictionary<string, object> {{ "website", "Springest"}}));
+					"https://springest.de", new Dictionary<string, object> {{ "website", "Springest"}}));			
 		}
 
 		protected override SpiderId GenerateSpiderId()
@@ -80,7 +81,7 @@ namespace DotnetSpider.Sample.samples
 		[EntitySelector(Expression = ".//li[@class='category-list__item']", Type = SelectorType.XPath)]		
 		//[GlobalValueSelector(Expression = "//a[@class='category-list__title-link']/@href", Name = "URL", Type = SelectorType.XPath)]
 		//[GlobalValueSelector(Expression = ".//a[@class='category-list__title-link']//text()", Name = "Title", Type = SelectorType.XPath)]
-		//[FollowRequestSelector(Expressions = new[] { "//div[@class='pager']" })]
+		//[FollowRequestSelector(Expressions = new[] { "//a[@class='category-list__title-link']/@href" })]
 		public class springestcategories : EntityBase<springestcategories>
 		{
 

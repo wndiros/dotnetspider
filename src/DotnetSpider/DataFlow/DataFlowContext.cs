@@ -9,7 +9,6 @@ using DotnetSpider.Selector;
 namespace DotnetSpider.DataFlow
 {
 	/// <summary>
-	/// 数据流处理器上下文
 	/// Data stream processor context
 	/// </summary>
 	public class DataFlowContext : IDisposable
@@ -22,22 +21,22 @@ namespace DotnetSpider.DataFlow
 		public SpiderOptions Options { get; }
 
 		/// <summary>
-		/// 下载器返回的结果
+		/// The result returned by the downloader
 		/// </summary>
 		public Response Response { get; }
 
 		/// <summary>
-		/// 消息队列回传的内容
+		/// The content returned by the message queue
 		/// </summary>
 		public byte[] MessageBytes { get; internal set; }
 
 		/// <summary>
-		/// 下载的请求
+		/// download request
 		/// </summary>
 		public Request Request { get; }
 
 		/// <summary>
-		/// 解析到的目标链接
+		/// Resolved target link
 		/// </summary>
 		internal List<Request> FollowRequests { get; }
 

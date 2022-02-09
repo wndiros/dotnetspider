@@ -3,40 +3,40 @@ using System.Text.RegularExpressions;
 
 namespace DotnetSpider.Selector
 {
-    /// <summary>
-    /// 查询接口
-    /// </summary>
-    public interface ISelectable
+	/// <summary>
+	/// query interface
+	/// </summary>
+	public interface ISelectable
     {
         SelectableType Type { get; }
 
-        /// <summary>
-        /// 通过XPath查找结果
-        /// </summary>
-        /// <param name="xpath">XPath 表达式</param>
-        /// <returns>查询接口</returns>
-        ISelectable XPath(string xpath);
+		/// <summary>
+		/// Find results by XPath
+		/// </summary>
+		/// </param> <param name="xpath">XPath expression</param>
+		/// <returns>Query interface</returns>
+		ISelectable XPath(string xpath);
 
-        /// <summary>
-        /// 通过Css 选择器查找元素, 并取得属性的值
-        /// </summary>
-        /// <param name="css">Css 选择器</param>
-        /// <param name="attr">查询到的元素的属性</param>
-        /// <returns>查询接口</returns>
-        ISelectable Css(string css, string attr = null);
+		/// <summary>
+		/// Find element through CSS selector and get the value of attribute
+		/// </summary>
+		/// <param name = "css" > Css selector</param
+		/// <param name="attr">The attribute of the element queried</param>
+		/// <returns>Query interface</returns>
+		ISelectable Css(string css, string attr = null);
 
-        /// <summary>
-        /// 查找所有的链接
-        /// </summary>
-        /// <returns>查询接口</returns>
-        IEnumerable<string> Links();
+		/// <summary>
+		/// find all links
+		/// </summary>
+		/// <returns>Query interface</returns>
+		IEnumerable<string> Links();
 
-        /// <summary>
-        /// 通过JsonPath查找结果
-        /// </summary>
-        /// <param name="jsonPath">JsonPath 表达式</param>
-        /// <returns>查询接口</returns>
-        ISelectable JsonPath(string jsonPath);
+		/// <summary>
+		/// Find results by JsonPath
+		/// </summary>
+		/// <param name="jsonPath">JsonPath expression</param>
+		/// <returns>Query interface</returns>
+		ISelectable JsonPath(string jsonPath);
 
         IEnumerable<ISelectable> Nodes();
 

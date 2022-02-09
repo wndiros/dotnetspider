@@ -3,12 +3,12 @@ namespace DotnetSpider
 	public class SpiderOptions
 	{
 		/// <summary>
-		/// 请求队列数限制
+		/// Request queue limit
 		/// </summary>
 		public int RequestedQueueCount { get; set; } = 1000;
 
 		/// <summary>
-		/// 请求链接深度限制
+		/// request link depth limit
 		/// </summary>
 		public int Depth { get; set; }
 
@@ -23,12 +23,12 @@ namespace DotnetSpider
 		public int EmptySleepTime { get; set; } = 60;
 
 		/// <summary>
-		/// 爬虫采集速度，1 表示 1 秒钟一个请求，0.5 表示 1 秒钟 0.5 个请求，5 表示 1 秒钟 5 个请求
+		/// Crawler collection speed, 1 means 1 request per second, 0.5 means 0.5 requests per second, 5 means 5 requests per second
 		/// </summary>
 		public double Speed { get; set; } = 1;
 
 		/// <summary>
-		/// 一次请求队列获取多少个请求
+		/// How many requests are fetched from the request queue at a time
 		/// </summary>
 		public uint Batch { get; set; } = 4;
 

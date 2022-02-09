@@ -5,14 +5,14 @@ using Microsoft.Extensions.Logging;
 namespace DotnetSpider.DataFlow
 {
 	/// <summary>
-	/// 数据流处理器基类
+	/// Data stream processor base class
 	/// </summary>
 	public abstract class DataFlowBase : IDataFlow
 	{
 		protected ILogger Logger { get; private set; }
 
 		/// <summary>
-		/// 初始化
+		/// initialization
 		/// </summary>
 		/// <returns></returns>
 		public abstract Task InitializeAsync();

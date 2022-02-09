@@ -8,7 +8,7 @@ using DotnetSpider.Scheduler.Component;
 namespace DotnetSpider.Scheduler
 {
 	/// <summary>
-	/// 基于内存的广度优先调度(不去重 URL)
+	/// Memory-based breadth-first scheduling (without deduplicating URLs)
 	/// </summary>
 	public class QueueBfsScheduler : SchedulerBase
 	{
@@ -16,7 +16,7 @@ namespace DotnetSpider.Scheduler
 			new();
 
 		/// <summary>
-		/// 构造方法
+		/// Constructer method
 		/// </summary>
 		public QueueBfsScheduler(IRequestHasher requestHasher) : base(new FakeDuplicateRemover(), requestHasher)
 		{
@@ -29,9 +29,9 @@ namespace DotnetSpider.Scheduler
 		}
 
 		/// <summary>
-		/// 如果请求未重复就添加到队列中
+		/// add to the queue if the request is not repeated
 		/// </summary>
-		/// <param name="request">请求</param>
+		/// <param name="request">ask</param>
 		protected override Task PushWhenNoDuplicate(Request request)
 		{
 			if (request == null)
@@ -44,10 +44,10 @@ namespace DotnetSpider.Scheduler
 		}
 
 		/// <summary>
-		/// 从队列中取出指定爬虫的指定个数请求
+		/// Take the specified number of requests from the specified crawler from the queue
 		/// </summary>
-		/// <param name="count">出队数</param>
-		/// <returns>请求</returns>
+		/// <param name="count">Number of queues</param>
+		/// <returns>request</returns>
 		protected override Task<IEnumerable<Request>> ImplDequeueAsync(int count = 1)
 		{
 			var requests = _requests.Take(count).ToArray();

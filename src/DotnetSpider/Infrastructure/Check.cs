@@ -42,13 +42,13 @@ namespace DotnetSpider.Infrastructure
             }
         }
 
-        /// <summary>
-        /// 验证指定值的断言<paramref name="assertion"/>是否为真，如果不为真，抛出指定消息<paramref name="message"/>的指定类型<typeparamref name="TException"/>异常
-        /// </summary>
-        /// <typeparam name="TException">异常类型</typeparam>
-        /// <param name="assertion">要验证的断言。</param>
-        /// <param name="message">异常消息。</param>
-        private static void Require<TException>(bool assertion, string message)
+		/// <summary>		
+		/// Verify that the assertion <paramref name="assertion"/> of the specified value is true, if not, throw an exception of the specified type <typeparamref name="TException"/> with the specified message <paramref name="message"/>
+		/// </summary>
+		/// <typeparam name="TException">异常类型</typeparam>
+		/// <param name="assertion">要验证的断言。</param>
+		/// <param name="message">异常消息。</param>
+		private static void Require<TException>(bool assertion, string message)
             where TException : Exception
         {
             if (assertion)

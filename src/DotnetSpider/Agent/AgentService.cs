@@ -53,7 +53,7 @@ namespace DotnetSpider.Agent
 
 			await _statisticsClient.RegisterAgentAsync(_options.AgentId, _options.AgentName);
 
-			// 分布式才需要注册
+			// Distributed only requires registration
 			if (_messageQueue.IsDistributed)
 			{
 				await _messageQueue.PublishAsBytesAsync(Topics.AgentCenter,
@@ -66,16 +66,16 @@ namespace DotnetSpider.Agent
 					});
 			}
 
-			// 同类型下载器注册于相同的 topic，用于负载均衡
+			// Downloaders of the same type are registered on the same "topic" for load balancing
 			await RegisterAgentAsync(_downloader.Name, stoppingToken);
 
 			if (_messageQueue.IsDistributed)
 			{
-				// 注册 agent_{id} 用于固定节点下载
+				// Register agent_{id} for fixed node download
 				await RegisterAgentAsync(string.Format(Topics.Spider, _options.AgentId), stoppingToken);
 			}
 
-			// 分布式才需要发送心跳
+			// Distributed only needs to send heartbeat
 			if (_messageQueue.IsDistributed)
 			{
 				await Task.Factory.StartNew(async () =>

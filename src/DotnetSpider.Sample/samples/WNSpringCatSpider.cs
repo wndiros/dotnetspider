@@ -29,6 +29,7 @@ namespace DotnetSpider.Sample.samples
 			var builder = Builder.CreateDefaultBuilder<WNSpringCatSpider>(options =>
 			{
 				options.Speed = 1;
+				options.Depth = 20;
 			});
 			builder.UseDownloader<HttpClientDownloader>();
 			builder.UseSerilog();
@@ -42,6 +43,7 @@ namespace DotnetSpider.Sample.samples
 			var builder = Builder.CreateDefaultBuilder<WNSpringCatSpider>(options =>
 			{
 				options.Speed = 1;
+				options.Depth = 10;
 			});
 			builder.UseDownloader<HttpClientDownloader>();
 			builder.UseSerilog();
@@ -61,13 +63,22 @@ namespace DotnetSpider.Sample.samples
 
 		protected override async Task InitializeAsync(CancellationToken stoppingToken = default)
 		{
-			
-			AddDataFlow(new SpringCatParser()); 
-			//AddDataFlow(new EntityParser());
+
+			AddDataFlow(new SpringCatParser());
+			//AddDataFlow(new DataParser<CategoriesEntity>());
+			//AddDataFlow(new MyConsoleStorage());
 			AddDataFlow(GetDefaultStorage());
+			//await AddRequestsAsync(	new Request("https://springest.de/"));
+			//
+			// set Start Link
+			//
 			await AddRequestsAsync(
-				new Request(
-					"https://springest.de", new Dictionary<string, object> { { "website", "Springest" } }));
+			new Request(
+				"https://springest.de", new Dictionary<string, object> { { "website", "Springest" } })
+			{ Timeout = 10000 } );
+
+
+
 		}
 
 		protected override SpiderId GenerateSpiderId()
@@ -76,50 +87,121 @@ namespace DotnetSpider.Sample.samples
 		}
 
 
-		protected class SpringCatParser : DataParser
+		protected class SpringCatParser : DataParser<CategoriesEntity>
 		{
 			public override Task InitializeAsync()
 			{
 
-				AddRequiredValidator((request =>
-				{
-					var host = request.RequestUri.Host;
-					var regex = host + "/$";
-					return Regex.IsMatch(request.RequestUri.ToString(), regex);
-				}));
+				//AddRequiredValidator((request =>
+				//{
+				//	var host = request.RequestUri.Host;
+				//	var regex = host + "/$";
+				//	return Regex.IsMatch(request.RequestUri.ToString(), regex);
+				//}));
+
+
 				// if you want to collect every pages
-				// AddFollowRequestQuerier(Selectors.XPath(".//div[@class='pager']"));
+				//AddFollowRequestQuerier(Selectors.XPath(".//li[@class='category-list__item']"));
+				base.InitializeAsync();
+				
+
+				//AddFollowRequestQuerier(Selectors.XPath("//a[@class='category-list__title-link']/@href"));
+				//AddFollowRequestQuerier(Selectors.XPath(".//a[@class='subject-list__link']"));
+				//AddFollowRequestQuerier(Selectors.XPath("."));
+
+
 				return Task.CompletedTask;
+
 			}
 
 			protected override Task ParseAsync(DataFlowContext context)
 			{
+				base.ParseAsync(context);
+
+				//AddFollowRequestQuerier(Selectors.XPath(".//li[@class='category-list__item']"));
+
+
+
+				var typeName = typeof(CategoriesEntity).FullName;
+				var results = new List<Request>();
+
 				var catList = context.Selectable.SelectList(Selectors.XPath(".//li[@class='category-list__item']"));
+				if (catList == null)
+				{
+					var catList2 = context.Selectable.SelectList(Selectors.XPath(".//li[@class='subject-title subject-list__item']"));
+					if (catList2 == null)
+					{
+						var catList3 = context.Selectable.SelectList(Selectors.XPath(".//li[@class='result-item product-item']"));
+						catList = catList3;
+					}
+					else
+					{
+						catList = catList2;
+					}
+				}
+
 				foreach (var category in catList)
 				{
 					var url = category.Select(Selectors.XPath("//a[@class='category-list__title-link']/@href"))?.Value;
 					var title = category.Select(Selectors.XPath(".//a[@class='category-list__title-link']//text()"))?.Value;
 
-
 					if (!string.IsNullOrWhiteSpace(url))
 					{
 						var request = context.CreateNewRequest(new Uri(url));
 						request.Properties.Add("url", url);
-						request.Properties.Add("page_title", title);
+						//request.Properties.Add("page_title", title);
+						//context.AddFollowRequests(request);
 
-						context.AddFollowRequests(request);
+
+						results.Add(request);
+						//		//AddFollowRequestQuerier(Selectors.XPath(".//div[@class='pager']"));
+						if (results.Count > 10)
+						{
+							break;
+						}
 					}
+
 				}
+
+				context.AddFollowRequests(results);
+
+
 
 				return Task.CompletedTask;
 			}
 		}
 
+		protected class MyConsoleStorage : DataFlowBase
+		{
+			public override Task InitializeAsync()
+			{
+				return Task.CompletedTask;
+			}
+
+			public override Task HandleAsync(DataFlowContext context)
+			{
+				if (IsNullOrEmpty(context))
+				{
+					Logger.LogWarning("Dataflow context does not contain parsing results");
+					return Task.CompletedTask;
+				}
+
+				var typeName = typeof(CategoriesEntity).FullName;
+				var data = context.GetData(typeName);
+				if (data is CategoriesEntity category)
+				{
+					Console.WriteLine($"URL: {category.url}, TITLE: {category.page_title}");
+				}
+
+				return Task.CompletedTask;
+			}
+		}
 		protected class EntityParser : DataParser
 		{
 			public override Task InitializeAsync()
 			{
 				// AddRequiredValidator("www\\.springest\\.de/n/\\d+");
+				//AddFollowRequestQuerier(Selectors.XPath("´.//a[@class='category-list__title-link']/@href"));
 				return Task.CompletedTask;
 			}
 
@@ -130,7 +212,7 @@ namespace DotnetSpider.Sample.samples
 					new CategoriesEntity
 					{
 						url = context.Request.RequestUri.ToString(),
-						page_title = context.Request.Properties["title"]?.ToString()?.Trim()
+						page_title = context.Request.Properties["page_title"]?.ToString()?.Trim()
 							//Summary = context.Request.Properties["summary"]?.ToString()?.Trim(),
 							//Views = int.Parse(context.Request.Properties["views"]?.ToString()?.Trim() ?? "0"),
 							//Content = context.Selectable.Select(Selectors.XPath(".//div[@id='news_body']")).Value
@@ -148,7 +230,7 @@ namespace DotnetSpider.Sample.samples
 		[EntitySelector(Expression = ".//li[@class='category-list__item']", Type = SelectorType.XPath)]
 		//[GlobalValueSelector(Expression = ".//a[@class='category-list__title-link']/@href", Name = "URL", Type = SelectorType.XPath)]
 		//[GlobalValueSelector(Expression = "//a[@class='category-list__title-link']//text()", Name = "Title", Type = SelectorType.XPath)]
-		//[FollowRequestSelector(Expressions = new[] { "//div[@class='pager']" })]
+		//[FollowRequestSelector(Expressions = new[] { "//div[@class='category-list__links']/a/@href" })]
 		public class CategoriesEntity : EntityBase<CategoriesEntity>
 		{
 
@@ -162,6 +244,7 @@ namespace DotnetSpider.Sample.samples
 
 			[Required]
 			//[ValueSelector(Expression = ".//h2[@class='news_entry']/a/@href")]
+			[ValueSelector(Expression = "//a[@class='category-list__title-link']/@href")]
 			[ValueSelector(Expression = "//a[@class='category-list__title-link']/@href")]
 			//[ValueSelector(Expression = "Title", Type = SelectorType.Environment)]
 			public string url { get; set; }

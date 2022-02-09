@@ -11,12 +11,11 @@ namespace DotnetSpider.DataFlow.Parser
 	public class ValueSelector : Selector
 	{
 		/// <summary>
-		/// 属性反射，用于设置解析值到实体对象
+		/// Property reflection, used to set parsed values ​​to entity objects
 		/// </summary>
 		internal PropertyInfo PropertyInfo { get; set; }
 
 		/// <summary>
-		/// 值是否可以为空, 如果不能为空但解析到的值为空时，当前对象被抛弃
 		/// Whether the value can be empty, if it cannot be empty but the parsed value is empty, the current object is discarded
 		/// </summary>
 		internal bool NotNull { get; set; }

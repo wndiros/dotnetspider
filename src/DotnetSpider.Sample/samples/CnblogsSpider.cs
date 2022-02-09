@@ -87,7 +87,7 @@ namespace DotnetSpider.Sample.samples
 					return Regex.IsMatch(request.RequestUri.ToString(), regex);
 				}));
 				// if you want to collect every pages
-				// AddFollowRequestQuerier(Selectors.XPath(".//div[@class='pager']"));
+				AddFollowRequestQuerier(Selectors.XPath(".//div[@class='pager']"));
 				return Task.CompletedTask;
 			}
 

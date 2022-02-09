@@ -9,7 +9,8 @@ namespace DotnetSpider.Downloader
 	public static class ServiceCollectionExtensions
 	{
 		/// <summary>
-		/// 只有本地爬虫才能配置下载器，分布式爬虫的下载器注册是在下载器代理中
+		/// Only the local crawler can configure the downloader,
+		/// and the downloader registration of the distributed crawler is in the downloader agent
 		/// </summary>
 		/// <param name="builder"></param>
 		/// <typeparam name="TDownloader"></typeparam>

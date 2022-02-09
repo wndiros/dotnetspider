@@ -21,7 +21,7 @@ namespace DotnetSpider.Scheduler
 		}
 
 		/// <summary>
-		/// 重置去重器
+		/// reset deduper
 		/// </summary>
 		public virtual async Task ResetDuplicateCheckAsync()
 		{
@@ -85,8 +85,9 @@ namespace DotnetSpider.Scheduler
 			}
 			finally
 			{
-				//工作完毕，或者发生异常时，检测一下当前线程是否占有锁，如果咱有了锁释放它
-				//以避免出现死锁的情况
+				//After the work is completed, or when an exception occurs,
+				//check whether the current thread holds the lock. If we have the lock, release it
+				//to avoid deadlock situations
 				if (locker)
 				{
 					_spinLock.Exit();

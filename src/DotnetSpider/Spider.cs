@@ -98,7 +98,7 @@ namespace DotnetSpider
 		protected abstract Task InitializeAsync(CancellationToken stoppingToken = default);
 
 		/// <summary>
-		/// 获取爬虫标识和名称
+		/// Get crawler ID and name
 		/// </summary>
 		/// <returns></returns>
 		protected virtual SpiderId GenerateSpiderId()
@@ -127,7 +127,7 @@ namespace DotnetSpider
 		}
 
 		/// <summary>
-		/// 配置请求(从 Scheduler 中出队的)
+		/// Configure request (dequeued from the Scheduler)
 		/// </summary>
 		/// <param name="request"></param>
 		protected virtual void ConfigureRequest(Request request)
@@ -194,9 +194,7 @@ namespace DotnetSpider
 
 				request.RequestedTimes += 1;
 
-				// 1. 请求次数超过限制则跳过，并添加失败记录
-				// 1. If the number of requests exceeds the limit, skip it and add a failure record
-				// 2. 默认构造的请求次数为 0， 并且不允许用户更改，因此可以保证数据安全性
+				// 1. If the number of requests exceeds the limit, skip it and add a failure record				
 				// 2. The number of requests constructed by default is 0, and users are not allowed to change it, so data security can be guaranteed
 				if (request.RequestedTimes > Options.RetriedTimes)
 				{
@@ -204,8 +202,8 @@ namespace DotnetSpider
 					continue;
 				}
 
-				// 1. 默认构造的深度为 0， 并且不允许用户更改，因此可以保证数据安全性
-				// 2. 当深度超过限制则跳过
+				// 1.The default constructed depth is 0， and does not allow user changes, so data security is guaranteed
+				// 2. Skip when depth exceeds limit
 				if (Options.Depth > 0 && request.Depth > Options.Depth)
 				{
 					continue;
@@ -272,8 +270,9 @@ namespace DotnetSpider
 						}
 					case Response response:
 						{
-							// 1. 从请求队列中去除请求
-							// 2. 若是 timeout 的请求，无法通过 Dequeue 获取，会通过 _requestedQueue.GetAllTimeoutList() 获取得到
+							// 1. remove the request from the request queue
+							// 2. If the request of timeout cannot be obtained through Dequeue,
+							// it will be obtained through _requestedQueue.GetAllTimeoutList()
 							var request = _requestedQueue.Dequeue(response.RequestHash);
 
 							if (request != null)
@@ -288,7 +287,10 @@ namespace DotnetSpider
 											$"{SpiderId} download {request.RequestUri}, {request.Hash} via {request.Agent} success");
 									}
 
-									// 是否下载成功由爬虫来决定，则非 Agent 自身
+									//
+									// Whether the download is successful or not
+									// is determined by the crawler, then the non-Agent itself
+									//
 									await _services.StatisticsClient.IncreaseAgentSuccessAsync(response.Agent,
 										response.ElapsedMilliseconds);
 									await HandleResponseAsync(request, response, bytes);
@@ -300,7 +302,9 @@ namespace DotnetSpider
 									Logger.LogError(
 										$"{SpiderId} download {request.RequestUri}, {request.Hash} status code: {response.StatusCode} failed: {response.ReasonPhrase}");
 
-									// 每次调用添加会导致 Requested + 1, 因此失败多次的请求最终会被过滤不再加到调度队列
+									//Each call to add will result in Requested + 1,
+									//so requests that fail multiple times will eventually be filtered and no longer
+									//added to the dispatch queue
 									await AddRequestsAsync(request);
 
 									OnRequestError?.Invoke(request, response);
@@ -338,11 +342,11 @@ namespace DotnetSpider
 				var count = await AddRequestsAsync(context.FollowRequests);
 				await _services.StatisticsClient.IncreaseTotalAsync(SpiderId.Id, count);
 
-				// 增加一次成功的请求
+				// Add a successful request
 				await _services.StatisticsClient.IncreaseSuccessAsync(SpiderId.Id);
 				await _services.Scheduler.SuccessAsync(request);
 			}
-			// DataFlow 可以参过抛出 ExitException 来中止爬虫程序
+			// DataFlow: You can stop the crawler by throwing ExitException
 			catch (ExitException ee)
 			{
 				Logger.LogError($"Exit: {ee}");
@@ -363,7 +367,7 @@ namespace DotnetSpider
 		}
 
 		/// <summary>
-		/// 若是没有数据解析器，则认为是不需要数据解析器，直接通到存储器，返回 true
+		/// If there is no data parser, it is considered that no data parser is needed, and it directly passes to the memory and returns true
 		/// </summary>
 		/// <param name="request"></param>
 		/// <returns></returns>
@@ -423,7 +427,7 @@ namespace DotnetSpider
 						{
 							ConfigureRequest(request);
 
-							// 若是没有一个 Parser 可以处理此请求，则不需要下载
+							// If no Parser can handle this request, no download is required
 							// https://github.com/dotnetcore/DotnetSpider/issues/182
 							if (!IsValidRequest(request))
 							{
@@ -561,7 +565,7 @@ namespace DotnetSpider
 					{
 						switch (request.Policy)
 						{
-							// 非初始请求如果是链式模式则使用旧的下载器
+							// Non-initial request use old downloader if chained mode
 							case RequestPolicy.Chained:
 								{
 									topic = $"{request.Agent}";
@@ -598,7 +602,7 @@ namespace DotnetSpider
 
 		protected async Task LoadRequestFromSuppliers(CancellationToken stoppingToken)
 		{
-			// 通过供应接口添加请求
+			// Anfrage über Bereitstellungsschnittstelle hinzufügen
 			foreach (var requestSupplier in _requestSuppliers)
 			{
 				foreach (var request in await requestSupplier.GetAllListAsync(stoppingToken))
@@ -615,7 +619,7 @@ namespace DotnetSpider
 		{
 			if (_dataFlows.Count == 0)
 			{
-				Logger.LogWarning($"{SpiderId} there is no any dataFlow");
+				Logger.LogWarning($"{SpiderId} there are no dataFlows");
 			}
 			else
 			{
