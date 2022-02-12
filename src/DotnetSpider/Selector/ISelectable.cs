@@ -40,33 +40,33 @@ namespace DotnetSpider.Selector
 
         IEnumerable<ISelectable> Nodes();
 
-        /// <summary>
-        /// 通过正则表达式查找结果
-        /// </summary>
-        /// <param name="pattern">正则表达式</param>
-        /// <param name="options"></param>
-        /// <param name="group">分组</param>
-        /// <returns>查询接口</returns>
-        ISelectable Regex(string pattern, RegexOptions options = RegexOptions.None, string replacement = "$0");
+		/// <summary>
+		/// Find results by regular expression
+		/// </summary>
+		/// <param name="pattern">Regular Expression</param>
+		/// <param name="options"></param>
+		/// <param name="group">Group</param>
+		/// <returns>Query interface</returns>
+		ISelectable Regex(string pattern, RegexOptions options = RegexOptions.None, string replacement = "$0");
 
-        /// <summary>
-        /// 获得当前查询器的文本结果, 如果查询结果为多个, 则返回第一个结果的值
-        /// </summary>
-        /// <returns>查询到的文本结果</returns>
-        string Value { get; }
+		/// <summary>
+		/// Get the text result of the current query, if there are multiple query results, return the value of the first result
+		/// </summary>
+		/// <returns>The text result of the query</returns>
+		string Value { get; }
 
-        /// <summary>
-        /// 通过查询器查找结果
-        /// </summary>
-        /// <param name="selector">查询器</param>
-        /// <returns>查询接口</returns>
-        ISelectable Select(ISelector selector);
+		/// <summary>
+		/// Find Results by Queryer
+		/// </summary>
+		/// <param name="selector">Queryer</param>
+		/// <returns>Query interface</returns>
+		ISelectable Select(ISelector selector);
 
-        /// <summary>
-        /// 通过查询器查找结果
-        /// </summary>
-        /// <param name="selector">查询器</param>
-        /// <returns>查询接口</returns>
-        IEnumerable<ISelectable> SelectList(ISelector selector);
+		/// <summary>
+		/// Find Results by Queryer
+		/// </summary>
+		/// <param name="selector">Queryer</param>
+		/// <returns>Query interface</returns>
+		IEnumerable<ISelectable> SelectList(ISelector selector);
     }
 }
