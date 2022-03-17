@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 namespace DotnetSpider.DataFlow
 {
 	/// <summary>
-	/// 数据库版本
+	/// Database version
 	/// </summary>
 	public enum SqlServerVersion
 	{

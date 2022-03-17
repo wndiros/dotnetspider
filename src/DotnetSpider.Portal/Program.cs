@@ -27,7 +27,7 @@ namespace DotnetSpider.Portal
 
 			Builder = WebHost.CreateDefaultBuilder(args)
 				.UseStartup<Startup>()
-				.UseSerilog()
+				.UseSerilog();
 #if DEBUG
 				//.UseUrls("http://localhost:7896");
 #else

@@ -60,7 +60,7 @@ namespace DotnetSpider.Sample.samples
 			{
 				if (IsNullOrEmpty(context))
 				{
-					Logger.LogWarning("数据流上下文不包含解析结果");
+					Logger.LogWarning("Dataflow context does not contain parsing results");
 					return Task.CompletedTask;
 				}
 
@@ -86,7 +86,7 @@ namespace DotnetSpider.Sample.samples
 					var regex = host + "/$";
 					return Regex.IsMatch(request.RequestUri.ToString(), regex);
 				}));
-				// if you want to collect every pages
+				// if you want to collect every page
 				AddFollowRequestQuerier(Selectors.XPath(".//div[@class='pager']"));
 				return Task.CompletedTask;
 			}

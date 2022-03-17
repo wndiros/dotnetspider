@@ -157,7 +157,7 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 获取数据项
+		/// get data item
 		/// </summary>
 		/// <param name="name">Name</param>
 		/// <returns></returns>
@@ -167,7 +167,7 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 获取所有数据项
+		/// get all data items
 		/// </summary>
 		/// <returns></returns>
 		public IDictionary<object, dynamic> GetData()
@@ -176,12 +176,12 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 是否包含数据项
+		/// whether to include data items
 		/// </summary>
 		public bool IsEmpty => _data.Count == 0;
 
 		/// <summary>
-		/// 清空数据
+		/// clear data
 		/// </summary>
 		public void Clear()
 		{

@@ -48,17 +48,17 @@ namespace DotnetSpider.Sample.samples
 						"Database='mysql';Data Source=localhost;password=1qazZAQ!;User ID=root;Port=3306;");
 				await conn.ExecuteAsync("create database if not exists cnblogs2;");
 				await conn.ExecuteAsync($@"
-create table if not exists cnblogs2.news2
-(
-    id       int auto_increment
-    primary key,
-    title    varchar(500)      not null,
-    url      varchar(500)      not null,
-    summary  varchar(1000)     null,
-    views    int               null,
-    content  varchar(2000)     null
-);
-");
+										create table if not exists cnblogs2.news2
+										(
+											id       int auto_increment
+											primary key,
+											title    varchar(500)      not null,
+											url      varchar(500)      not null,
+											summary  varchar(1000)     null,
+											views    int               null,
+											content  varchar(2000)     null
+										);
+										");
 			}
 
 			public override async Task HandleAsync(DataFlowContext context)

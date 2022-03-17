@@ -100,7 +100,7 @@ namespace DotnetSpider.Sample.samples
 				//}));
 
 
-				// if you want to collect every pages
+				// if you want to collect all pages
 				//AddFollowRequestQuerier(Selectors.XPath(".//li[@class='category-list__item']"));
 				//base.InitializeAsync();
 				

@@ -32,14 +32,14 @@ namespace DotnetSpider.Sample.samples
 
 		protected override async Task InitializeAsync(CancellationToken stoppingToken)
 		{
-			// 添加自定义解析
+			// 	Add custom parsing
 			AddDataFlow(new Parser());
-			// 使用控制台存储器
+			// Use console memory
 			AddDataFlow(new ConsoleStorage());
-			// 添加采集请求
+			// Add a collection request
 			await AddRequestsAsync(new Request("https://github.com/zlzforever")
 			{
-				// 请求超时 10 秒
+				//
 				//Request timeout 10 seconds
 				Timeout = 10000
 			});

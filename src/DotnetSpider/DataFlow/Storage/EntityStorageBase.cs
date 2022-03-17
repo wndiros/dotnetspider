@@ -16,8 +16,8 @@ namespace DotnetSpider.DataFlow.Storage
 		/// <summary>
 		///
 		/// </summary>
-		/// <param name="context">数据流上下文</param>
-		/// <param name="entities">数据解析结果 (数据类型, List(数据对象))</param>
+		/// <param name="context">data flow context</param>
+		/// <param name="entities">Data parsing result (data type, List(data object))</param>
 		/// <returns></returns>
 		protected abstract Task HandleAsync(DataFlowContext context, IDictionary<Type, ICollection<dynamic>> entities);
 

@@ -24,14 +24,14 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 流处理
+		/// stream processing
 		/// </summary>
-		/// <param name="context">处理上下文</param>
+		/// <param name="context">processing context</param>
 		/// <returns></returns>
 		public abstract Task HandleAsync(DataFlowContext context);
 
 		/// <summary>
-		/// 是否为空
+		/// is empty
 		/// </summary>
 		/// <param name="context"></param>
 		/// <returns></returns>

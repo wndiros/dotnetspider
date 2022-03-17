@@ -91,7 +91,7 @@ namespace DotnetSpider
 		}
 
 		/// <summary>
-		/// 初始化爬虫数据
+		/// Initialize crawler data
 		/// </summary>
 		/// <param name="stoppingToken"></param>
 		/// <returns></returns>

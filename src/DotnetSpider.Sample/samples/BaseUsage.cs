@@ -62,7 +62,7 @@ namespace DotnetSpider.Sample.samples
 
 		protected override SpiderId GenerateSpiderId()
 		{
-			return new(ObjectId.CreateId().ToString(), "博客园");
+			return new(ObjectId.CreateId().ToString(), "Blogpark");
 		}
 	}
 }

@@ -29,7 +29,7 @@ namespace DotnetSpider.DataFlow.Parser
 		/// <summary>
 		/// data analysis
 		/// </summary>
-		/// <param name="context">处理上下文</param>
+		/// <param name="context">processing context</param>
 		/// <returns></returns>
 		protected abstract Task ParseAsync(DataFlowContext context);
 
@@ -171,7 +171,7 @@ namespace DotnetSpider.DataFlow.Parser
 			{
 				if (IsValidRequest(request))
 				{
-					// 在此强制设制 Owner, 防止用户忘记导致出错
+					// mandatory here Owner, Prevent users from forgetting to cause errors
 					request.Owner = context.Request.Owner;
 					request.Agent = context.Response.Agent;
 					context.AddFollowRequests(request);
