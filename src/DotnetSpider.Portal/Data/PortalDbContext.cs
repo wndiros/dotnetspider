@@ -57,7 +57,8 @@ namespace DotnetSpider.Portal.Data
 			{
 				case "mysql":
 					{
-						builder.UseMySql(ServerVersion.AutoDetect(options.ConnectionString));
+						builder.UseMySql(options.ConnectionString, MariaDbServerVersion.AutoDetect(options.ConnectionString),  mySqlOptions =>
+						mySqlOptions.EnableRetryOnFailure(maxRetryCount: 10, maxRetryDelay: System.TimeSpan.FromSeconds(30), errorNumbersToAdd: null));
 						break;
 					}
 

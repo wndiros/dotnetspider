@@ -17,6 +17,9 @@ namespace DotnetSpider.Portal
 			using var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>()
 				.CreateScope();
 			var context = scope.ServiceProvider.GetRequiredService<PortalDbContext>();
+			var constring1 = context.Database.GetConnectionString();
+			//var constring = context.Database.GetDbConnection().ConnectionString;
+			await context.Database.ExecuteSqlRawAsync("SELECT 1");
 			await context.Database.MigrateAsync();
 			await context.Database.EnsureCreatedAsync();
 

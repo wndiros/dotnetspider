@@ -29,9 +29,9 @@ namespace DotnetSpider.Portal
 				.UseStartup<Startup>()
 				.UseSerilog()
 #if DEBUG
-				.UseUrls("http://localhost:7896");
+				//.UseUrls("http://localhost:7896");
 #else
-				.UseUrls("http://+:7896");
+				//.UseUrls("http://+:7896");
 #endif
 			await Builder.Build().RunAsync();
 		}

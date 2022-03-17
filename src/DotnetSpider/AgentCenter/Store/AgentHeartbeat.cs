@@ -35,6 +35,12 @@ namespace DotnetSpider.AgentCenter.Store
 		public long AvailableMemory { get; private set; }
 
 		/// <summary>
+		/// 空闲内存
+		/// </summary>
+		[Column("freeMemory")]
+		public long freeMemory { get; private set; }
+
+		/// <summary>
 		/// CPU 负载
 		/// </summary>
 		[Column("cpu_load")]

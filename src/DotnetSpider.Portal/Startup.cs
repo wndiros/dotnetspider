@@ -54,10 +54,11 @@ namespace DotnetSpider.Portal
 				case "mysql":
 				{
 					dbContextOptionsBuilder = b =>
-						b.UseMySql(ServerVersion.AutoDetect(options.ConnectionString),
+						b.UseMySql(options.ConnectionString,ServerVersion.AutoDetect(options.ConnectionString),
 							sql => sql.MigrationsAssembly(migrationsAssembly));
 					break;
 				}
+
 
 				default:
 				{
@@ -122,7 +123,7 @@ namespace DotnetSpider.Portal
 					"default",
 					"{controller=Home}/{action=Index}/{id?}");
 			});
-
+			
 			SeedData.InitializeAsync(new PortalOptions(Configuration), app.ApplicationServices).GetAwaiter()
 				.GetResult();
 

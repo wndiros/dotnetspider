@@ -66,8 +66,8 @@ namespace DotnetSpider.Sample.samples
 
 			AddDataFlow(new SpringCatParser());
 			//AddDataFlow(new CategoriesParser());
-			AddDataFlow(new MyConsoleStorage());
-			//AddDataFlow(GetDefaultStorage());
+			//AddDataFlow(new MyConsoleStorage());
+			AddDataFlow(GetDefaultStorage());
 			//await AddRequestsAsync(	new Request("https://springest.de/"));
 			//
 			// set Start Link

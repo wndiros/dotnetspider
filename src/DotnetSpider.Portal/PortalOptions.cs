@@ -15,7 +15,7 @@ namespace DotnetSpider.Portal
 		public string DatabaseType => _configuration["DatabaseType"];
 
 		/// <summary>
-		/// 数据库连接字符串
+		/// database connection string
 		/// </summary>
 		public string ConnectionString => _configuration["ConnectionString"];
 
