@@ -43,7 +43,7 @@ namespace DotnetSpider.DataFlow
 		public IServiceProvider ServiceProvider { get; }
 
 		/// <summary>
-		/// 构造方法
+		/// Constructor 
 		/// </summary>
 		/// <param name="request"></param>
 		/// <param name="response">下载器返回的结果</param>
@@ -98,7 +98,7 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 获取属性
+		/// get attribute
 		/// </summary>
 		/// <param name="key">Key</param>
 		public dynamic this[string key]
@@ -119,7 +119,7 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 是否包含属性
+		/// Whether to include attributes
 		/// </summary>
 		/// <param name="key">Key</param>
 		/// <returns></returns>
@@ -129,7 +129,7 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 添加属性
+		/// add properties
 		/// </summary>
 		/// <param name="key">Key</param>
 		/// <param name="value">Value</param>
@@ -139,7 +139,7 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 添加数据项
+		/// add data item
 		/// </summary>
 		/// <param name="name">Name</param>
 		/// <param name="data">Value</param>

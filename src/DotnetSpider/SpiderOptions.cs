@@ -13,12 +13,12 @@ namespace DotnetSpider
 		public int Depth { get; set; }
 
 		/// <summary>
-		/// 请求重试次数限制
+		/// Request Retry Limit
 		/// </summary>
 		public int RetriedTimes { get; set; } = 3;
 
 		/// <summary>
-		/// 当队列中无链接超时后退出爬虫
+		/// Exit the crawler when there is no link in the queue after the timeout
 		/// </summary>
 		public int EmptySleepTime { get; set; } = 60;
 
@@ -33,17 +33,17 @@ namespace DotnetSpider
 		public uint Batch { get; set; } = 4;
 
 		/// <summary>
-		/// 是否去除外链
+		/// Whether to remove external links
 		/// </summary>
 		public bool RemoveOutboundLinks { get; set; } = false;
 
 		/// <summary>
-		/// 存储器类型: FullTypeName, AssemblyName
+		/// memory type: FullTypeName, AssemblyName
 		/// </summary>
 		public string StorageType { get; set; } = "DotnetSpider.MySql.MySqlEntityStorage, DotnetSpider.MySql";
 
 		/// <summary>
-		/// 获取新代码的时间间隔
+		/// Time interval to get new codes
 		/// </summary>
 		public int RefreshProxy { get; set; } = 30;
 	}

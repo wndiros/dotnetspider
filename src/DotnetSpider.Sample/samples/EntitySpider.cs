@@ -88,12 +88,12 @@ namespace DotnetSpider.Sample.samples
 
 			[Required]
 			[StringLength(200)]
-			[ValueSelector(Expression = "类别", Type = SelectorType.Environment)]
+			[ValueSelector(Expression = "category", Type = SelectorType.Environment)]
 			public string Category { get; set; }
 
 			[Required]
 			[StringLength(200)]
-			[ValueSelector(Expression = "网站", Type = SelectorType.Environment)]
+			[ValueSelector(Expression = "website", Type = SelectorType.Environment)]
 			public string WebSite { get; set; }
 
 			[StringLength(200)]

@@ -86,6 +86,12 @@ namespace DotnetSpider.Sample.samples
 			return new(ObjectId.CreateId().ToString(), "Categories");
 		}
 
+		//public class sprintcatparser : DataParser<springestcategories>
+		//{
+
+
+		//}
+
 
 		protected class SpringCatParser : DataParser<CategoriesEntity>
 		{
@@ -116,14 +122,10 @@ namespace DotnetSpider.Sample.samples
 
 			protected override Task ParseAsync(DataFlowContext context)
 			{
-				//base.ParseAsync(context);
-
-				//AddFollowRequestQuerier(Selectors.XPath(".//li[@class='category-list__item']"));
-
-
-
+				//var typeName = typeof(CategoriesEntity).FullName;
+				List<CategoriesEntity> results = new List<CategoriesEntity>();
 				var typeName = typeof(CategoriesEntity).FullName;
-				var results = 1;
+				var count = 1;
 
 				var catList = context.Selectable.SelectList(Selectors.XPath(".//li[@class='category-list__item']"));
 				string urlfilter = "//a[@class='category-list__title-link']/@href";
@@ -172,26 +174,28 @@ namespace DotnetSpider.Sample.samples
 								request.Properties.Add("url", url);
 								request.Properties.Add("page_title", title);
 								request.Properties.Add("maincategory", maincategory);
+								request.Properties.Add("level", level);
 
 								context.AddFollowRequests(request);
 							}
 
-							context.AddData(typeName,
-							new CategoriesEntity
+							results.Add(new CategoriesEntity
 							{
 								url = url,
 								page_title = title,
-							//maincategory = Int32.Parse(context.Request.Properties["maincategory"]?.ToString()?.Trim()),
+								//maincategory = Int32.Parse(context.Request.Properties["maincategory"]?.ToString()?.Trim()),
 								maincategory = maincategory,
 								created_at = DateTime.Now,
 								visited_at = DateTime.Now,
-							}); ; ;
+								level = level,
+							});
 
-							results++;
+
+							count++;
 
 							//results.Add(request);
 							//		//AddFollowRequestQuerier(Selectors.XPath(".//div[@class='pager']"));
-							if (results > 9)
+							if (count > 20)
 							{
 								break;
 							}
@@ -199,6 +203,8 @@ namespace DotnetSpider.Sample.samples
 
 
 					}
+					AddParsedResult(context, results);
+					//context.AddData(typeName,CatList);
 
 				}
 
