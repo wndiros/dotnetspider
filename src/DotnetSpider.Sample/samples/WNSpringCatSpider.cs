@@ -28,7 +28,7 @@ namespace DotnetSpider.Sample.samples
 		{
 			var builder = Builder.CreateDefaultBuilder<WNSpringCatSpider>(options =>
 			{
-				options.Speed = 1;
+				options.Speed = 0.1;
 				options.Depth = 20;
 			});
 			builder.UseDownloader<HttpClientDownloader>();
@@ -42,7 +42,7 @@ namespace DotnetSpider.Sample.samples
 		{
 			var builder = Builder.CreateDefaultBuilder<WNSpringCatSpider>(options =>
 			{
-				options.Speed = 1;
+				options.Speed = 0.1;
 				options.Depth = 10;
 			});
 			builder.UseDownloader<HttpClientDownloader>();
@@ -142,7 +142,7 @@ namespace DotnetSpider.Sample.samples
 						catList = catList3;
 						urlfilter = ".//h2[@class='as-h3 product-item__title']/a/@href";
 						titlefilter = ".//h2[@class='as-h3 product-item__title']/a/@title";
-						maincatfilter = ".//li[@class='breadcrumb__item lvl-1 list-item breadcrumb__item--current current']/a/span[@itemprop='title']/text()";
+						maincatfilter = ".//li[@class='breadcrumb__item lvl-3 list-item']/a[@class='breadcrumb__link nav-link']/span[@itemprop='title']/text()";
 						level = 3;
 					}
 					else
@@ -150,8 +150,10 @@ namespace DotnetSpider.Sample.samples
 						catList = catList2;
 						urlfilter = "//a[@class='subject-list__link']/@href";
 						titlefilter = "//a[@class='subject-list__link']/span/text()";
-						maincatfilter = "//li[@class='breadcrumb__item lvl-1 list-item breadcrumb__item--current current']/a/span[@itemprop='title']/text()";
-						               
+						maincatfilter = "//li[@class='breadcrumb__item lvl-1 list-item breadcrumb__item--current current']/a/*[@itemprop='title']/text()";
+						//maincatfilter = "//li[@class='breadcrumb__item lvl-1 list-item breadcrumb__item--current current']/a/span/text()";
+						//breadcrumb__item lvl-1 list-item breadcrumb__item--current current
+						////breadcrumb__link nav-link 
 						level = 2;
 					}
 				}
@@ -163,7 +165,9 @@ namespace DotnetSpider.Sample.samples
 					{
 						var url = category.Select(Selectors.XPath(urlfilter))?.Value;
 						var title = category.Select(Selectors.XPath(titlefilter))?.Value;						
-						var maincategory = category.Select(Selectors.XPath(maincatfilter))?.Value;
+						var maincategory = context.Selectable.Select(Selectors.XPath(maincatfilter))?.Value;
+						
+						//category.Select(Selectors.XPath(maincatfilter))?.Value;
 						if (!string.IsNullOrWhiteSpace(url))
 						{
 							if (level == 1)
@@ -195,10 +199,10 @@ namespace DotnetSpider.Sample.samples
 
 							//results.Add(request);
 							//		//AddFollowRequestQuerier(Selectors.XPath(".//div[@class='pager']"));
-							if (count > 20)
-							{
-								break;
-							}
+							//if (count > 20)
+							//{
+							//	break;
+							//}
 						}
 
 
