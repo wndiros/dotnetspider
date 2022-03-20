@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 namespace DotnetSpider.DataFlow.Storage
 {
 	/// <summary>
-	/// 关系型数据库保存实体解析结果
+	/// Relational database saves entity resolution results
 	/// </summary>
 	public abstract class RelationalDatabaseEntityStorageBase : EntityStorageBase
 	{
@@ -37,24 +37,24 @@ namespace DotnetSpider.DataFlow.Storage
 		protected const string ShortType = "Short";
 
 		/// <summary>
-		/// 创建数据库连接接口
+		/// Create database connection interface
 		/// </summary>
-		/// <param name="connectString">连接字符串</param>
+		/// <param name="connectString">connection string</param>
 		/// <returns></returns>
 		protected abstract IDbConnection CreateDbConnection(string connectString);
 
 		/// <summary>
-		/// 生成 SQL 语句
+		/// Generate SQL statement
 		/// </summary>
-		/// <param name="tableMetadata">表元数据</param>
+		/// <param name="tableMetadata">table metadata</param>
 		/// <returns></returns>
 		protected abstract SqlStatements GenerateSqlStatements(TableMetadata tableMetadata);
 
 		/// <summary>
-		/// 创建数据库和表
+		/// Create databases and tables
 		/// </summary>
-		/// <param name="conn">数据库连接</param>
-		/// <param name="sqlStatements">SQL 语句</param>
+		/// <param name="conn">Database linkage</param>
+		/// <param name="sqlStatements">SQL statement</param>
 		protected virtual void EnsureDatabaseAndTableCreated(IDbConnection conn,
 			SqlStatements sqlStatements)
 		{
@@ -67,10 +67,10 @@ namespace DotnetSpider.DataFlow.Storage
 		}
 
 		/// <summary>
-		/// 构造方法
+		/// Constructor method
 		/// </summary>
-		/// <param name="model">存储器类型</param>
-		/// <param name="connectionString">连接字符串</param>
+		/// <param name="model">memory type</param>
+		/// <param name="connectionString">connection string</param>
 		protected RelationalDatabaseEntityStorageBase(StorageMode model, string connectionString)
 		{
 			connectionString.NotNullOrWhiteSpace(nameof(connectionString));
@@ -79,27 +79,27 @@ namespace DotnetSpider.DataFlow.Storage
 		}
 
 		/// <summary>
-		/// 存储器类型
+		/// memory type
 		/// </summary>
 		public StorageMode Mode { get; set; }
 
 		/// <summary>
-		/// 数据库操作重试次数
+		/// Database operation retries
 		/// </summary>
 		public int RetryTimes { get; set; } = 600;
 
 		/// <summary>
-		/// 连接字符串
+		/// connection string
 		/// </summary>
 		public string ConnectionString { get; }
 
 		/// <summary>
-		/// 是否使用事务操作。默认不使用。
+		/// Whether to use transaction operations. Not used by default.
 		/// </summary>
 		public bool UseTransaction { get; set; }
 
 		/// <summary>
-		/// 数据库忽略大小写
+		/// Database ignores case
 		/// </summary>
 		public bool IgnoreCase { get; set; } = true;
 
@@ -116,7 +116,7 @@ namespace DotnetSpider.DataFlow.Storage
 
 				var sqlStatements = GetSqlStatements(tableMetadata);
 
-				// 因为同一个存储器会收到不同的数据对象，因此不能使用 initAsync 来初始化数据库
+				// You cannot use initAsync to initialize the database because the same store will receive different data objects
 				_executedCache.GetOrAdd(sqlStatements.CreateTableSql, _ =>
 				{
 					var conn1 = TryCreateDbConnection();
@@ -150,7 +150,7 @@ namespace DotnetSpider.DataFlow.Storage
 							{
 								if (string.IsNullOrWhiteSpace(sqlStatements.UpdateSql))
 								{
-									throw new SpiderException("未能生成更新 SQL");
+									throw new SpiderException("Failed to generate update SQL");
 								}
 
 								await conn.ExecuteAsync(sqlStatements.UpdateSql, list, transaction);
@@ -170,9 +170,9 @@ namespace DotnetSpider.DataFlow.Storage
 					}
 					catch (Exception ex)
 					{
-						Logger.LogError($"尝试插入数据失败: {ex}");
+						Logger.LogError($"Attempt to insert data failed: {ex}");
 
-						// 网络异常需要重试，并且不需要 Rollback
+						// Network exceptions require retry and do not require Rollback
 						if (!(ex.InnerException is EndOfStreamException))
 						{
 							try
@@ -181,7 +181,7 @@ namespace DotnetSpider.DataFlow.Storage
 							}
 							catch (Exception e)
 							{
-								Logger?.LogError($"数据库回滚失败: {e}");
+								Logger?.LogError($"Database rollback failed: {e}");
 							}
 
 							break;
@@ -234,7 +234,9 @@ namespace DotnetSpider.DataFlow.Storage
 
 		private SqlStatements GetSqlStatements(TableMetadata tableMetadata)
 		{
-			// 每天执行一次建表操作, 可以实现每天一个表的操作，或者按周分表可以在运行时创建新表。
+			// Performing a table creation operation once a day can realize
+			// the operation of one table per day, or create a new table
+			// at runtime by dividing the table by week.
 			var key = tableMetadata.TypeName;
 			if (tableMetadata.Schema.TablePostfix != TablePostfix.None)
 			{
@@ -255,8 +257,7 @@ namespace DotnetSpider.DataFlow.Storage
 				}
 			}
 
-			throw new SpiderException(
-				"无有效的数据库连接配置");
+			throw new SpiderException("No valid database connection configuration");
 		}
 
 		private IDbConnection TryCreateDbConnection(string connectionString)
@@ -269,7 +270,7 @@ namespace DotnetSpider.DataFlow.Storage
 			}
 			catch
 			{
-				Logger.LogError($"无法打开数据库连接: {connectionString}.");
+				Logger.LogError($"Could not open database connection: {connectionString}.");
 			}
 
 			return null;
