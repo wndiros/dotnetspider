@@ -11,6 +11,7 @@ using DotnetSpider.DataFlow.Storage;
 using DotnetSpider.Downloader;
 using DotnetSpider.Http;
 using DotnetSpider.Infrastructure;
+using DotnetSpider.MySql;
 using DotnetSpider.MySql.Scheduler;
 using DotnetSpider.Scheduler;
 using DotnetSpider.Scheduler.Component;
@@ -64,6 +65,15 @@ namespace DotnetSpider.Sample.samples
 		protected override async Task InitializeAsync(CancellationToken stoppingToken = default)
 		{
 
+			//Type objType = typeof(WNSpringCatEntityStorage);
+
+			//// Print the assembly full name.
+			//Console.WriteLine($"Assembly full name:\n   {objType.Assembly.FullName}.");
+
+			//// Print the assembly qualified name.
+			//Console.WriteLine($"Assembly qualified name:\n   {objType.AssemblyQualifiedName}.");
+
+
 			AddDataFlow(new SpringCatParser());
 			//AddDataFlow(new CategoriesParser());
 			//AddDataFlow(new MyConsoleStorage());
@@ -76,9 +86,6 @@ namespace DotnetSpider.Sample.samples
 			new Request(
 				"https://springest.de", new Dictionary<string, object> { { "website", "Springest" } })
 			{ Timeout = 10000 } );
-
-
-
 		}
 
 		protected override SpiderId GenerateSpiderId()
@@ -220,6 +227,9 @@ namespace DotnetSpider.Sample.samples
 			}
 			
 		}
+
+		
+
 
 		protected class MyConsoleStorage : DataFlowBase
 		{

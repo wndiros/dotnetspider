@@ -4,12 +4,12 @@ using System.Linq;
 namespace DotnetSpider.DataFlow.Storage
 {
 	/// <summary>
-	/// 表元数据
+	/// table metadata
 	/// </summary>
 	public class TableMetadata
 	{
 		/// <summary>
-		/// 实体类型名称
+		/// entity type name
 		/// </summary>
 		public string TypeName { get; set; }
 
@@ -19,34 +19,34 @@ namespace DotnetSpider.DataFlow.Storage
 		public Schema Schema { get; set; }
 
 		/// <summary>
-		/// 主键
+		/// primary key
 		/// </summary>
 		public HashSet<string> Primary { get; set; }
 
 		/// <summary>
-		/// 索引
+		/// index
 		/// </summary>
 		public HashSet<IndexMetadata> Indexes { get; }
 
 		/// <summary>
-		/// 更新列
+		/// update column
 		/// </summary>
 		public HashSet<string> Updates { get; set; }
 
 		/// <summary>
-		/// 属性名，属性数据类型的字典
+		/// attribute name, dictionary of attribute data types
 		/// </summary>
 		public Dictionary<string, Column> Columns { get; }
 
 		/// <summary>
-		/// 是否是自增主键
+		/// Whether it is an auto-incrementing primary key
 		/// </summary>
 		public bool IsAutoIncrementPrimary => Primary != null && Primary.Count == 1 &&
 		                                      (Columns[Primary.First()].Type == "Int32" ||
 		                                       Columns[Primary.First()].Type == "Int64");
 
 		/// <summary>
-		/// 判断某一列是否在主键中
+		/// Check if a column is in the primary key
 		/// </summary>
 		/// <param name="column">列</param>
 		/// <returns></returns>
@@ -56,17 +56,17 @@ namespace DotnetSpider.DataFlow.Storage
 		}
 
 		/// <summary>
-		/// 判断是否有主键
+		/// Determine if there is a primary key
 		/// </summary>
 		public bool HasPrimary => Primary != null && Primary.Count > 0;
 
 		/// <summary>
-		/// 判断是否有更新列
+		/// Determine if there is an update column
 		/// </summary>
 		public bool HasUpdateColumns => Updates != null && Updates.Count > 0;
 
 		/// <summary>
-		/// 构造方法
+		/// Constructor
 		/// </summary>
 		public TableMetadata()
 		{

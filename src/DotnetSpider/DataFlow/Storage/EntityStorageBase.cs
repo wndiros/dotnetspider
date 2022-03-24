@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace DotnetSpider.DataFlow.Storage
 {
 	/// <summary>
-	/// 实体存储器
+	/// physical storage
 	/// </summary>
 	public abstract class EntityStorageBase : DataFlowBase
 	{

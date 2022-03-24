@@ -31,7 +31,7 @@ namespace DotnetSpider.MySql
 	}
 
 	/// <summary>
-	/// 把解析到的爬虫实体数据存成 SQL 文件, 支持两种模式
+	/// Save the parsed crawler entity data as a SQL file, supporting two modes
 	/// LoadFile 是批量导入模式通过命令 LOAD DATA LOCAL INFILE '{filePath}' INTO TABLE `{schema}`.`{dababase}` FIELDS TERMINATED BY '$'  ENCLOSED BY '#' LINES TERMINATED BY '@END@' IGNORE 1 LINES; 还原。
 	/// InsertSql 是完整的 Insert SQL 语句, 需要一条条执行来导入数据
 	/// </summary>

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace DotnetSpider.DataFlow
 {
 	/// <summary>
-	/// 控制台打印解析结果(所有解析结果)
+	/// Console print parsing results (all parsing results)
 	/// The console prints the results of the analysis  (all analysis results)
 	/// </summary>
 	public class ConsoleStorage : DataFlowBase

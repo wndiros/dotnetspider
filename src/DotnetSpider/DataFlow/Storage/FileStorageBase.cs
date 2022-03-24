@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 namespace DotnetSpider.DataFlow.Storage
 {
 	/// <summary>
-	/// 解析结果的文件存储器
+	/// File storage for parsing results
 	/// </summary>
 	public abstract class FileStorageBase : DataFlowBase
 	{
 		private readonly object _locker = new();
 
 		/// <summary>
-		/// 存储的根文件夹
+		/// root folder for storage
 		/// </summary>
 		protected string Folder { get; private set; }
 
@@ -29,9 +29,9 @@ namespace DotnetSpider.DataFlow.Storage
 		}
 
 		/// <summary>
-		/// 获取存储文件夹
+		/// get storage folder
 		/// </summary>
-		/// <param name="owner">任务标识</param>
+		/// <param name="owner">Task ID</param>
 		/// <returns></returns>
 		protected string GetDataFolder(string owner)
 		{
@@ -45,7 +45,7 @@ namespace DotnetSpider.DataFlow.Storage
 		}
 
 		/// <summary>
-		/// 创建文件写入器
+		/// Create a file writer
 		/// </summary>
 		/// <param name="file"></param>
 		protected StreamWriter OpenWrite(string file)

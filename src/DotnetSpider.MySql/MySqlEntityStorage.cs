@@ -11,7 +11,7 @@ using MySqlConnector;
 namespace DotnetSpider.MySql
 {
 	/// <summary>
-	/// MySql 保存解析(实体)结果
+	/// MySql save parsing (entity) results
 	/// </summary>
 	public class MySqlEntityStorage : RelationalDatabaseEntityStorageBase
 	{
@@ -29,10 +29,10 @@ namespace DotnetSpider.MySql
 		}
 
 		/// <summary>
-		/// 构造方法
+		/// connection string
 		/// </summary>
-		/// <param name="mode">存储器类型</param>
-		/// <param name="connectionString">连接字符串</param>
+		/// <param name="mode">memory type</param>
+		/// <param name="connectionString">connection string</param>
 		public MySqlEntityStorage(StorageMode mode,
 			string connectionString) : base(mode,
 			connectionString)
@@ -45,9 +45,9 @@ namespace DotnetSpider.MySql
 		}
 
 		/// <summary>
-		/// 创建数据库连接接口
+		/// Create database connection interface
 		/// </summary>
-		/// <param name="connectString">连接字符串</param>
+		/// <param name="connectString">connection string</param>
 		/// <returns></returns>
 		protected override IDbConnection CreateDbConnection(string connectString)
 		{
@@ -55,9 +55,9 @@ namespace DotnetSpider.MySql
 		}
 
 		/// <summary>
-		/// 生成 SQL 语句
+		/// Generate SQL statement
 		/// </summary>
-		/// <param name="tableMetadata">表元数据</param>
+		/// <param name="tableMetadata">table metadata</param>
 		/// <returns></returns>
 		protected override SqlStatements GenerateSqlStatements(TableMetadata tableMetadata)
 		{
@@ -77,10 +77,10 @@ namespace DotnetSpider.MySql
 		}
 
 		/// <summary>
-		/// 生成创建数据库的 SQL 语句
+		/// Generate SQL statement to create database
 		/// </summary>
-		/// <param name="tableMetadata">表元数据</param>
-		/// <returns>SQL 语句</returns>
+		/// <param name="tableMetadata">table metadata</param>
+		/// <returns>SQL statement</returns>
 		protected virtual string GenerateCreateDatabaseSql(TableMetadata tableMetadata)
 		{
 			return string.IsNullOrWhiteSpace(tableMetadata.Schema.Database)
@@ -89,10 +89,10 @@ namespace DotnetSpider.MySql
 		}
 
 		/// <summary>
-		/// 生成创建表的 SQL 语句
+		/// Generate the SQL statement to create the table
 		/// </summary>
-		/// <param name="tableMetadata">表元数据</param>
-		/// <returns>SQL 语句</returns>
+		/// <param name="tableMetadata">table metadata</param>
+		/// <returns>SQL statement</returns>
 		protected virtual string GenerateCreateTableSql(TableMetadata tableMetadata)
 		{
 			var isAutoIncrementPrimary = tableMetadata.IsAutoIncrementPrimary;
@@ -143,16 +143,16 @@ namespace DotnetSpider.MySql
 		}
 
 		/// <summary>
-		/// 生成插入数据的 SQL 语句
+		/// Generate SQL statement to insert data
 		/// </summary>
-		/// <param name="tableMetadata">表元数据</param>
-		/// <param name="ignoreDuplicate">是否忽略重复键的数据</param>
-		/// <returns>SQL 语句</returns>
+		/// <param name="tableMetadata">table metadata</param>
+		/// <param name="ignoreDuplicate">Whether to ignore data for duplicate keys</param>
+		/// <returns>SQL statement</returns>
 		protected virtual string GenerateInsertSql(TableMetadata tableMetadata, bool ignoreDuplicate)
 		{
 			var columns = tableMetadata.Columns;
 			var isAutoIncrementPrimary = tableMetadata.IsAutoIncrementPrimary;
-			// 去掉自增主键
+			// Remove the auto-incrementing primary key
 			var insertColumns =
 				(isAutoIncrementPrimary ? columns.Where(c1 => c1.Key != tableMetadata.Primary.First()) : columns)
 				.ToArray();
@@ -169,15 +169,15 @@ namespace DotnetSpider.MySql
 		}
 
 		/// <summary>
-		/// 生成更新数据的 SQL 语句
+		/// Generate SQL statements to update data
 		/// </summary>
-		/// <param name="tableMetadata">表元数据</param>
-		/// <returns>SQL 语句</returns>
+		/// <param name="tableMetadata">table metadata</param>
+		/// <returns>SQL statement</returns>
 		protected virtual string GenerateUpdateSql(TableMetadata tableMetadata)
 		{
 			if (tableMetadata.Updates == null || tableMetadata.Updates.Count == 0)
 			{
-				Logger?.LogWarning("实体没有设置主键, 无法生成 Update 语句");
+				Logger?.LogWarning("The entity does not have a primary key set and the Update statement cannot be generated");
 				return null;
 			}
 
@@ -197,21 +197,21 @@ namespace DotnetSpider.MySql
 		}
 
 		/// <summary>
-		/// 生成插入新数据或者更新旧数据的 SQL 语句
+		/// Generate SQL statements that insert new data or update old data
 		/// </summary>
-		/// <param name="tableMetadata">表元数据</param>
-		/// <returns>SQL 语句</returns>
+		/// <param name="tableMetadata">table metadata</param>
+		/// <returns>SQL statement</returns>
 		protected virtual string GenerateInsertAndUpdateSql(TableMetadata tableMetadata)
 		{
 			if (!tableMetadata.HasPrimary)
 			{
-				Logger?.LogWarning("实体没有设置主键, 无法生成 InsertAndUpdate 语句");
+				Logger?.LogWarning("The entity does not have a primary key set and the InsertAndUpdate statement cannot be generated");
 				return null;
 			}
 
 			var columns = tableMetadata.Columns;
 			var isAutoIncrementPrimary = tableMetadata.IsAutoIncrementPrimary;
-			// 去掉自增主键
+			// Remove the auto-incrementing primary key
 			var insertColumns =
 				(isAutoIncrementPrimary ? columns.Where(c1 => c1.Key != tableMetadata.Primary.First()) : columns)
 				.ToArray();
@@ -229,10 +229,10 @@ namespace DotnetSpider.MySql
 		}
 
 		/// <summary>
-		/// 生成数据库名称的 SQL
+		/// Remove the auto-incrementing primary key
 		/// </summary>
-		/// <param name="tableMetadata">表元数据</param>
-		/// <returns>SQL 语句</returns>
+		/// <param name="tableMetadata">table metadata</param>
+		/// <returns>SQL statement</returns>
 		protected virtual string GenerateTableSql(TableMetadata tableMetadata)
 		{
 			var tableName = GetNameSql(GetTableName(tableMetadata));
@@ -243,9 +243,9 @@ namespace DotnetSpider.MySql
 		}
 
 		/// <summary>
-		/// 生成列的 SQL
+		/// SQL to generate the column
 		/// </summary>
-		/// <returns>SQL 语句</returns>
+		/// <returns>SQL statement</returns>
 		protected virtual string GenerateColumnSql(Column column, bool isPrimary)
 		{
 			var columnName = GetNameSql(column.Name);
@@ -259,11 +259,11 @@ namespace DotnetSpider.MySql
 		}
 
 		/// <summary>
-		/// 生成数据类型的 SQL
+		/// Generate SQL for data types
 		/// </summary>
-		/// <param name="type">数据类型</param>
-		/// <param name="length">数据长度</param>
-		/// <returns>SQL 语句</returns>
+		/// <param name="type">type of data</param>
+		/// <param name="length">Data length</param>
+		/// <returns>SQL statement</returns>
 		protected virtual string GenerateDataTypeSql(string type, int length)
 		{
 			string dataType;

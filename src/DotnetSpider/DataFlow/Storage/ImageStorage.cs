@@ -32,7 +32,7 @@ namespace DotnetSpider.DataFlow
 		{
 			if (IsNullOrEmpty(context))
 			{
-				Logger.LogWarning("数据流上下文不包含解析结果");
+				Logger.LogWarning("Dataflow context does not contain parsing results");
 				return Task.CompletedTask;
 			}
 

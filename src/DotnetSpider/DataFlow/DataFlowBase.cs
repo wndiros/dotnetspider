@@ -41,7 +41,7 @@ namespace DotnetSpider.DataFlow
 		}
 
 		/// <summary>
-		/// 释放
+		/// Free up memory
 		/// </summary>
 		public virtual void Dispose()
 		{
