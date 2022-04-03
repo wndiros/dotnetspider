@@ -35,34 +35,34 @@ namespace DotnetSpider
 		private readonly IList<DataParser> _dataParsers;
 
 		/// <summary>
-		/// 请求 Timeout 事件
+		/// Request Timeout event
 		/// </summary>
 		protected event Action<Request[]> OnRequestTimeout;
 
 		/// <summary>
-		/// 请求错误事件
+		/// request error event
 		/// </summary>
 		protected event Action<Request, Response> OnRequestError;
 
 		/// <summary>
-		/// 调度器中无新的请求事件
+		/// No new request event in scheduler
 		/// </summary>
 		protected event Action OnSchedulerEmpty;
 
 		protected SpiderOptions Options { get; }
 
 		/// <summary>
-		/// 爬虫标识
+		/// Reptile logo
 		/// </summary>
 		protected SpiderId SpiderId { get; private set; }
 
 		/// <summary>
-		/// 日志接口
+		/// log interface
 		/// </summary>
 		protected ILogger Logger { get; }
 
 		/// <summary>
-		/// 是否分布式爬虫
+		/// Is it a distributed crawler?
 		/// </summary>
 		protected bool IsDistributed => _services.MessageQueue.IsDistributed;
 

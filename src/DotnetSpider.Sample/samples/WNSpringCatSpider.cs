@@ -73,11 +73,11 @@ namespace DotnetSpider.Sample.samples
 			//// Print the assembly qualified name.
 			//Console.WriteLine($"Assembly qualified name:\n   {objType.AssemblyQualifiedName}.");
 
-
-			AddDataFlow(new SpringCatParser());
+			IDataFlow wnEntityStorage = GetDefaultStorage();
+			AddDataFlow(new SpringCatParser(wnEntityStorage));
 			//AddDataFlow(new CategoriesParser());
 			//AddDataFlow(new MyConsoleStorage());
-			AddDataFlow(GetDefaultStorage());
+			AddDataFlow(wnEntityStorage);
 			//await AddRequestsAsync(	new Request("https://springest.de/"));
 			//
 			// set Start Link
@@ -102,6 +102,13 @@ namespace DotnetSpider.Sample.samples
 
 		protected class SpringCatParser : DataParser<CategoriesEntity>
 		{
+			private readonly IDataFlow _wnEntityStorage;
+
+			public   SpringCatParser(IDataFlow  entityStorage)
+			{
+				_wnEntityStorage = entityStorage;
+
+			}
 			public override Task InitializeAsync()
 			{
 
@@ -116,12 +123,12 @@ namespace DotnetSpider.Sample.samples
 				// if you want to collect all pages
 				//AddFollowRequestQuerier(Selectors.XPath(".//li[@class='category-list__item']"));
 				//base.InitializeAsync();
-				
+
 
 				//AddFollowRequestQuerier(Selectors.XPath("//a[@class='category-list__title-link']/@href"));
 				//AddFollowRequestQuerier(Selectors.XPath(".//a[@class='subject-list__link']"));
 				//AddFollowRequestQuerier(Selectors.XPath("."));
-
+				
 
 				return Task.CompletedTask;
 
@@ -173,43 +180,47 @@ namespace DotnetSpider.Sample.samples
 						var url = category.Select(Selectors.XPath(urlfilter))?.Value;
 						var title = category.Select(Selectors.XPath(titlefilter))?.Value;						
 						var maincategory = context.Selectable.Select(Selectors.XPath(maincatfilter))?.Value;
-						
-						//category.Select(Selectors.XPath(maincatfilter))?.Value;
-						if (!string.IsNullOrWhiteSpace(url))
+
+						if (!_wnEntityStorage.RecordExists("url", url))
 						{
-							if (level == 1)
+
+							//category.Select(Selectors.XPath(maincatfilter))?.Value;
+							if (!string.IsNullOrWhiteSpace(url))
 							{
+								if (level == 1)
+								{
 
 
-								var request = context.CreateNewRequest(new Uri(url));
-								request.Properties.Add("url", url);
-								request.Properties.Add("page_title", title);
-								request.Properties.Add("maincategory", maincategory);
-								request.Properties.Add("level", level);
+									var request = context.CreateNewRequest(new Uri(url));
+									request.Properties.Add("url", url);
+									request.Properties.Add("page_title", title);
+									request.Properties.Add("maincategory", maincategory);
+									request.Properties.Add("level", level);
 
-								context.AddFollowRequests(request);
+									context.AddFollowRequests(request);
+								}
+
+								results.Add(new CategoriesEntity
+								{
+									url = url,
+									page_title = title,
+									//maincategory = Int32.Parse(context.Request.Properties["maincategory"]?.ToString()?.Trim()),
+									maincategory = maincategory,
+									created_at = DateTime.Now,
+									visited_at = DateTime.Now,
+									level = level,
+								});
+
+
+								count++;
+
+								//results.Add(request);
+								//		//AddFollowRequestQuerier(Selectors.XPath(".//div[@class='pager']"));
+								//if (count > 20)
+								//{
+								//	break;
+								//}
 							}
-
-							results.Add(new CategoriesEntity
-							{
-								url = url,
-								page_title = title,
-								//maincategory = Int32.Parse(context.Request.Properties["maincategory"]?.ToString()?.Trim()),
-								maincategory = maincategory,
-								created_at = DateTime.Now,
-								visited_at = DateTime.Now,
-								level = level,
-							});
-
-
-							count++;
-
-							//results.Add(request);
-							//		//AddFollowRequestQuerier(Selectors.XPath(".//div[@class='pager']"));
-							//if (count > 20)
-							//{
-							//	break;
-							//}
 						}
 
 
@@ -260,10 +271,12 @@ namespace DotnetSpider.Sample.samples
 
 		protected class CategoriesParser : DataParser
 		{
+			
 			public override Task InitializeAsync()
 			{
 				//AddRequiredValidator("news\\.cnblogs\\.com/n/\\d+");
 				return Task.CompletedTask;
+				
 			}
 
 			protected override Task ParseAsync(DataFlowContext context)

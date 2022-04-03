@@ -60,8 +60,9 @@ namespace DotnetSpider.Sample.samples
 			protected override Task ParseAsync(DataFlowContext context)
 			{
 				var selectable = context.Selectable;
-				// 解析数据
+				//
 				//Analytical data
+				//
 				var author = selectable.XPath("//span[@class='p-name vcard-fullname d-block overflow-hidden']")
 					?.Value;
 				var name = selectable.XPath("//span[@class='p-nickname vcard-username d-block']")

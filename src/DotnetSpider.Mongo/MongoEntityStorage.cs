@@ -15,7 +15,7 @@ using MongoDB.Driver;
 namespace DotnetSpider.Mongo
 {
 	/// <summary>
-	/// MongoDB 保存解析(实体)结果 TODO: 是否要考虑存储模式：插入，新的插入旧的更新，更新 ETC
+	/// MongoDB Save parse (entity) results TODO: Whether to consider storage mode: insert, new insert old update, update ETC
 	/// </summary>
 	public class MongoEntityStorage : EntityStorageBase
 	{

@@ -34,9 +34,9 @@ namespace DotnetSpider.DataFlow.Storage
 		}
 
 		/// <summary>
-		/// 获取存储文件夹
+		/// get storage folder
 		/// </summary>
-		/// <param name="owner">任务标识</param>
+		/// <param name="owner">Task ID</param>
 		/// <returns></returns>
 		protected virtual string GetDataFolder(string owner)
 		{
@@ -63,11 +63,11 @@ namespace DotnetSpider.DataFlow.Storage
 		}
 
 		/// <summary>
-		/// 获取数据文件路径
+		/// Get data file path
 		/// </summary>
-		/// <param name="context">数据上下文件</param>
-		/// <param name="tableMetadata">表元数据</param>
-		/// <param name="extension">文件扩展名</param>
+		/// <param name="context">data file</param>
+		/// <param name="tableMetadata">table metadata</param>
+		/// <param name="extension">file extension</param>
 		/// <returns></returns>
 		protected virtual string GetDataFile(DataFlowContext context, TableMetadata tableMetadata, string extension)
 		{

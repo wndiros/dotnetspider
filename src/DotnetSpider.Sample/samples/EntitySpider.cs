@@ -63,7 +63,7 @@ namespace DotnetSpider.Sample.samples
 			AddDataFlow(GetDefaultStorage());
 			await AddRequestsAsync(
 				new Request(
-					"https://news.cnblogs.com/n/page/1", new Dictionary<string, object> {{"网站", "博客园"}}));
+					"https://news.cnblogs.com/n/page/1", new Dictionary<string, object> {{ "website", "Blog Park" } }));
 		}
 
 		protected override SpiderId GenerateSpiderId()

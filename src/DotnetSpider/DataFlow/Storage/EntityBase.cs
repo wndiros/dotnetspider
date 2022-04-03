@@ -12,19 +12,19 @@ namespace DotnetSpider.DataFlow.Storage
         TableMetadata GetTableMetadata();
     }
 
-    /// <summary>
-    /// 实体基类
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public abstract class EntityBase<T> : IEntity where T : class, new()
+	/// <summary>
+	/// entity base class
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	public abstract class EntityBase<T> : IEntity where T : class, new()
     {
         private readonly Lazy<TableMetadata> _tableMetadata = new();
 
-        /// <summary>
-        /// 获取实体的表元数据
-        /// </summary>
-        /// <returns></returns>
-        TableMetadata IEntity.GetTableMetadata()
+		/// <summary>
+		/// Get table metadata for an entity
+		/// </summary>
+		/// <returns></returns>
+		TableMetadata IEntity.GetTableMetadata()
         {
             Configure();
 

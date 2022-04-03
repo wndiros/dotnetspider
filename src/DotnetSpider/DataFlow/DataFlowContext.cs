@@ -46,7 +46,7 @@ namespace DotnetSpider.DataFlow
 		/// Constructor 
 		/// </summary>
 		/// <param name="request"></param>
-		/// <param name="response">下载器返回的结果</param>
+		/// <param name="response">The result returned by the downloader</param>
 		/// <param name="options"></param>
 		/// <param name="serviceProvider"></param>
 		public DataFlowContext(IServiceProvider serviceProvider,

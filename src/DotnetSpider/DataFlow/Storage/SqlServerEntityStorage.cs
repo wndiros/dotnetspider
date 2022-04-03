@@ -66,7 +66,7 @@ namespace DotnetSpider.DataFlow
 	}
 
 	/// <summary>
-	/// SqlServer 保存解析(实体)结果
+	/// SqlServer save parsing (entity) results
 	/// </summary>
 	public class SqlServerEntityStorage : RelationalDatabaseEntityStorageBase
 	{
