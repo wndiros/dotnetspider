@@ -268,71 +268,71 @@ namespace DotnetSpider.Sample.samples
 			return null;
 		}
 
-		private  async Task<bool> RecordExists(DataFlowContext context,
-			IDictionary<Type, ICollection<dynamic>> entities)
-		{
-			using var conn = TryCreateDbConnection();
+		//private async Task<bool> RecordExists(DataFlowContext context,
+		//	IDictionary<Type, ICollection<dynamic>> entities)
+		//{
+		//	using var conn = TryCreateDbConnection();
 
-			foreach (var kv in entities)
-			{
-				var list = (IList)kv.Value;
-				var tableMetadata = _tableMetadataDict.GetOrAdd(kv.Key,
-					_ => ((IEntity)list[0]).GetTableMetadata());
+		//	foreach (var kv in entities)
+		//	{
+		//		var list = (IList)kv.Value;
+		//		var tableMetadata = _tableMetadataDict.GetOrAdd(kv.Key,
+		//			_ => ((IEntity)list[0]).GetTableMetadata());
 
-				var sqlStatements = GetSqlStatements(tableMetadata);
+		//		var sqlStatements = GetSqlStatements(tableMetadata);
 
-				// You cannot use initAsync to initialize the database because the same store will receive different data objects
-				_executedCache.GetOrAdd(sqlStatements.CreateTableSql, _ =>
-				{
-					var conn1 = TryCreateDbConnection();
-					EnsureDatabaseAndTableCreated(conn1, sqlStatements);
-					return string.Empty;
-				});
-				for (var i = 0; i < RetryTimes; ++i)
-				{
-					IDbTransaction transaction = null;
-					try
-					{
-						if (UseTransaction)
-						{
-							transaction = conn.BeginTransaction();
-						}
+		//		// You cannot use initAsync to initialize the database because the same store will receive different data objects
+		//		_executedCache.GetOrAdd(sqlStatements.CreateTableSql, _ =>
+		//		{
+		//			var conn1 = TryCreateDbConnection();
+		//			EnsureDatabaseAndTableCreated(conn1, sqlStatements);
+		//			return string.Empty;
+		//		});
+		//		for (var i = 0; i < RetryTimes; ++i)
+		//		{
+		//			IDbTransaction transaction = null;
+		//			try
+		//			{
+		//				if (UseTransaction)
+		//				{
+		//					transaction = conn.BeginTransaction();
+		//				}
 
-					var found =	await conn.QueryAsync(sqlStatements.SelectSql, list, transaction);
+		//			var results =	await conn.QueryAsync(sqlStatements.SelectSql, list);
 
-						transaction?.Commit();
+		//				transaction?.Commit();
 
-						break;
-					}
-					catch (Exception ex)
-					{
-						Logger.LogError($"Attempt to query data failed: {ex}");
+		//				break;
+		//			}
+		//			catch (Exception ex)
+		//			{
+		//				Logger.LogError($"Attempt to query data failed: {ex}");
 
-						// Network exceptions require retry and do not require Rollback
-						if (!(ex.InnerException is EndOfStreamException))
-						{
-							try
-							{
-								transaction?.Rollback();
-							}
-							catch (Exception e)
-							{
-								Logger?.LogError($"Database rollback failed: {e}");
-							}
+		//				// Network exceptions require retry and do not require Rollback
+		//				if (!(ex.InnerException is EndOfStreamException))
+		//				{
+		//					try
+		//					{
+		//						transaction?.Rollback();
+		//					}
+		//					catch (Exception e)
+		//					{
+		//						Logger?.LogError($"Database rollback failed: {e}");
+		//					}
 
-							break;
-						}
-					}
-					finally
-					{
-						transaction?.Dispose();
-					}
-				}
-			}
+		//					break;
+		//				}
+		//			}
+		//			finally
+		//			{
+		//				transaction?.Dispose();
+		//			}
+		//		}
+		//	}
 
 
-			return false;
+		//	return false;
 
-		}
+		//}
 	}
 }

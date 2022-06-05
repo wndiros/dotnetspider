@@ -181,8 +181,7 @@ namespace DotnetSpider.Sample.samples
 						var title = category.Select(Selectors.XPath(titlefilter))?.Value;						
 						var maincategory = context.Selectable.Select(Selectors.XPath(maincatfilter))?.Value;
 
-						if (!_wnEntityStorage.RecordExists("url", url))
-						{
+						
 
 							//category.Select(Selectors.XPath(maincatfilter))?.Value;
 							if (!string.IsNullOrWhiteSpace(url))
@@ -221,7 +220,7 @@ namespace DotnetSpider.Sample.samples
 								//	break;
 								//}
 							}
-						}
+						
 
 
 					}
@@ -303,9 +302,14 @@ namespace DotnetSpider.Sample.samples
 		/// </summary>
 
 		[Schema("Springest", "Categories")]
+		
 		protected class CategoriesEntity : EntityBase<CategoriesEntity>
 		{
-
+			protected override void Configure()
+			{
+				HasIndex(x => x.url, true);
+				//HasIndex(x => new { x.WebSite, x.Guid }, true);
+			}
 			//
 			/// <summary>
 			/// Category Data			

@@ -121,7 +121,7 @@ namespace DotnetSpider.DataFlow.Storage
 
             if (columns == null || columns.Count == 0)
             {
-                throw new SpiderException("索引列不能为空");
+                throw new SpiderException("Index column cannot be null");
             }
 
             _tableMetadata.Value.Indexes.Add(new IndexMetadata(columns.ToArray(), isUnique));
@@ -154,7 +154,7 @@ namespace DotnetSpider.DataFlow.Storage
 
                     if (columns.Count != body.Arguments.Count)
                     {
-                        throw new SpiderException("表达式不正确");
+                        throw new SpiderException("Incorrect expression");
                     }
 
                     break;
@@ -177,7 +177,7 @@ namespace DotnetSpider.DataFlow.Storage
 
                 default:
                 {
-                    throw new SpiderException("表达式不正确");
+                    throw new SpiderException("Incorrect expression");
                 }
             }
 
