@@ -23,10 +23,7 @@ using Serilog;
 
 namespace DotnetSpider.Sample.samples
 {
-	public interface IDataFlowWN: IDataFlow
-	{
-
-	}
+	
 		public class WNSpringCatSpider : Spider
 	{
 		IDataFlow DataSource;
