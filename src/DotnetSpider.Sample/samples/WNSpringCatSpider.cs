@@ -23,8 +23,13 @@ using Serilog;
 
 namespace DotnetSpider.Sample.samples
 {
-	public class WNSpringCatSpider : Spider
+	public interface IDataFlowWN: IDataFlow
 	{
+
+	}
+		public class WNSpringCatSpider : Spider
+	{
+		IDataFlow DataSource;
 		public static async Task RunAsync()
 		{
 			var builder = Builder.CreateDefaultBuilder<WNSpringCatSpider>(options =>
@@ -65,18 +70,16 @@ namespace DotnetSpider.Sample.samples
 		protected override async Task InitializeAsync(CancellationToken stoppingToken = default)
 		{
 
-			//Type objType = typeof(WNSpringCatEntityStorage);
+			Type objType = typeof(WNSpringCatEntityStorage);
 
 			//// Print the assembly full name.
 			//Console.WriteLine($"Assembly full name:\n   {objType.Assembly.FullName}.");
 
 			//// Print the assembly qualified name.
-			//Console.WriteLine($"Assembly qualified name:\n   {objType.AssemblyQualifiedName}.");
+			Console.WriteLine($"Assembly qualified name:\n   {objType.AssemblyQualifiedName}.");
 
 			IDataFlow wnEntityStorage = GetDefaultStorage();
 			AddDataFlow(new SpringCatParser(wnEntityStorage));
-			//AddDataFlow(new CategoriesParser());
-			//AddDataFlow(new MyConsoleStorage());
 			AddDataFlow(wnEntityStorage);
 			//await AddRequestsAsync(	new Request("https://springest.de/"));
 			//
@@ -106,8 +109,11 @@ namespace DotnetSpider.Sample.samples
 
 			public   SpringCatParser(IDataFlow  entityStorage)
 			{
+				//Was planed for querying if a specific record exists
+				//Not necessary as unique records can be enforced by an unique index in the DB table
+				//the definition of the index can be done in the custom entity Class
 				_wnEntityStorage = entityStorage;
-
+				//_wnEntityStorage.
 			}
 			public override Task InitializeAsync()
 			{
