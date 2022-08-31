@@ -334,5 +334,13 @@ namespace DotnetSpider.Sample.samples
 			return false;
 
 		}
+		public virtual async Task<IEnumerable<dynamic>> GetData(string query)
+		{
+			using var conn = TryCreateDbConnection();
+								
+			IEnumerable < dynamic >  results = await conn.QueryAsync<dynamic>(query);
+
+			return results.ToList();
+		}
 	}
 }

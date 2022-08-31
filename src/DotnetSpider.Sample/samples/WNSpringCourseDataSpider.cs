@@ -66,23 +66,36 @@ namespace DotnetSpider.Sample.samples
 			Type objType = typeof(WNSpringCatEntityStorage);
 
 			//// Print the assembly full name.
-			//Console.WriteLine($"Assembly full name:\n   {objType.Assembly.FullName}.");
+			Console.WriteLine($"Assembly full name:\n   {objType.Assembly.FullName}.");
 
 			//// Print the assembly qualified name.
 			Console.WriteLine($"Assembly qualified name:\n   {objType.AssemblyQualifiedName}.");
 
 			WNSpringCatEntityStorage wnEntityStorage = (WNSpringCatEntityStorage) GetDefaultStorage();
-			AddDataFlow(new SpringCatParser(wnEntityStorage));
+			AddDataFlow(new ProductsParser());
 			AddDataFlow(wnEntityStorage);
+
+			//
+			// get Links from Database
+			//
+			IEnumerable<dynamic> results = await  wnEntityStorage.GetData("select * from Categories");
+
+			var i = 0;
+			foreach (var row in results)
+			{
+							
+				await AddRequestsAsync(
+					new Request(row.url, new Dictionary<string, object> { { "website", "Springest" } })
+					//new Request(row.url)
+					{ Timeout = 10000 });
+				i += 1;
+				if (i == 10)
+				{
+					break;
+				}
+
+			}
 			
-			//await AddRequestsAsync(	new Request("https://springest.de/"));
-			//
-			// set Start Link
-			//
-			await AddRequestsAsync(
-			new Request(
-				"https://springest.de", new Dictionary<string, object> { { "website", "Springest" } })
-			{ Timeout = 10000 });
 		}
 
 		protected override SpiderId GenerateSpiderId()
@@ -97,20 +110,20 @@ namespace DotnetSpider.Sample.samples
 		//}
 
 
-		protected class SpringCatParser : DataParser<CategoriesEntity>
+		protected class ProductsParser : DataParser<ProductEntity>
 		{
-			private readonly IDataFlowWN _wnEntityStorage;
+			//private readonly IDataFlowWN _wnEntityStorage;
 
-			public SpringCatParser(IDataFlowWN entityStorage)
-			{
-				//Was planed for querying if a specific record exists
-				//Not necessary as unique records can be enforced by an unique index in the DB table
-				//the definition of the index can be done in the custom entity Class
-				_wnEntityStorage =  entityStorage;
+			//public ProductsParser(IDataFlowWN entityStorage)
+			//{
+			//	//Was planed for querying if a specific record exists
+			//	//Not necessary as unique records can be enforced by an unique index in the DB table
+			//	//the definition of the index can be done in the custom entity Class
+			//	_wnEntityStorage =  entityStorage;
 				
 
 
-			}
+			//}
 			public override Task InitializeAsync()
 			{
 
@@ -139,8 +152,8 @@ namespace DotnetSpider.Sample.samples
 			protected override Task ParseAsync(DataFlowContext context)
 			{
 				//var typeName = typeof(CategoriesEntity).FullName;
-				List<CategoriesEntity> results = new List<CategoriesEntity>();
-				var typeName = typeof(CategoriesEntity).FullName;
+				List<ProductEntity> results = new List<ProductEntity>();
+				var typeName = typeof(ProductEntity).FullName;
 				var count = 1;
 
 				var catList = context.Selectable.SelectList(Selectors.XPath(".//li[@class='category-list__item']"));
@@ -182,6 +195,7 @@ namespace DotnetSpider.Sample.samples
 						var url = category.Select(Selectors.XPath(urlfilter))?.Value;
 						var title = category.Select(Selectors.XPath(titlefilter))?.Value;
 						var maincategory = context.Selectable.Select(Selectors.XPath(maincatfilter))?.Value;
+						//var subcategory = context.Selectable.Select(Selectors.XPath(subcatfilter))?.Value;
 
 
 
@@ -201,15 +215,15 @@ namespace DotnetSpider.Sample.samples
 								context.AddFollowRequests(request);
 							}
 
-							results.Add(new CategoriesEntity
+							results.Add(new ProductEntity
 							{
 								url = url,
-								page_title = title,
+								product_title = title,
 								//maincategory = Int32.Parse(context.Request.Properties["maincategory"]?.ToString()?.Trim()),
 								maincategory = maincategory,
+								//subcategory = subcategory,
 								created_at = DateTime.Now,
-								visited_at = DateTime.Now,
-								level = level,
+								visited_at = DateTime.Now,								
 							});
 
 
@@ -258,11 +272,11 @@ namespace DotnetSpider.Sample.samples
 					return Task.CompletedTask;
 				}
 
-				var typeName = typeof(CategoriesEntity).FullName;
+				var typeName = typeof(ProductEntity).FullName;
 				var data = context.GetData(typeName);
-				if (data is CategoriesEntity category)
+				if (data is ProductEntity category)
 				{
-					Console.WriteLine($"URL: {category.url}, TITLE: {category.page_title},  Maincategory: {category.maincategory}");
+					Console.WriteLine($"URL: {category.url}, TITLE: {category.product_title},  Maincategory: {category.maincategory}");
 				}
 
 				return Task.CompletedTask;
@@ -270,42 +284,13 @@ namespace DotnetSpider.Sample.samples
 		}
 
 
-		protected class CategoriesParser : DataParser
-		{
-
-			public override Task InitializeAsync()
-			{
-				//AddRequiredValidator("news\\.cnblogs\\.com/n/\\d+");
-				return Task.CompletedTask;
-
-			}
-
-			protected override Task ParseAsync(DataFlowContext context)
-			{
-				var typeName = typeof(CategoriesEntity).FullName;
-
-
-				context.AddData(typeName,
-					new CategoriesEntity
-					{
-						url = context.Request.RequestUri.ToString(),
-						page_title = context.Request.Properties["page_title"]?.ToString()?.Trim(),
-						//maincategory = Int32.Parse(context.Request.Properties["maincategory"]?.ToString()?.Trim()),
-						//maincategory = Int32.Parse(context.Request.Properties["maincategory"]?.ToString()?.Trim()),
-						maincategory = context.Request.Properties["maincategory"]?.ToString()?.Trim(),
-						created_at = DateTime.Now,
-						visited_at = DateTime.Now,
-					}); ; ;
-				return Task.CompletedTask;
-			}
-		}
 		/// <summary>
 		/// docker run --name mariadbDSpiderDemo -p 3306:3306 -volume -v mariadbtest:/var/lib/mysql -e MYSQL_ROOT_PASSWORD=clamawu! -d mariadb
 		/// </summary>
 
-		[Schema("Springest", "Categories")]
+		[Schema("Springest", "Product")]
 
-		protected class CategoriesEntity : EntityBase<CategoriesEntity>
+		protected class ProductEntity : EntityBase<ProductEntity>
 		{
 			protected override void Configure()
 			{
@@ -314,17 +299,23 @@ namespace DotnetSpider.Sample.samples
 			}
 			//
 			/// <summary>
-			/// Category Data			
+			/// Product Data			
 			/// </summary>
 			///
 
 			public int Id { get; set; }
-			public string url { get; set; }
-			public string page_title { get; set; }
+			public string trainingId { get; set; }
+			public string url { get; set; }			
 			public string maincategory { get; set; }
+			public string subcategory { get; set; }
+			public string product_title { get; set; }
+			public string description { get; set; }
+			public double price { get; set; }
+			public string rating { get; set; }
+			public string maxparticipants { get; set; }
 			public DateTime created_at { get; set; }
 			public DateTime visited_at { get; set; }
-			public int level { get; set; }
+			
 		}
 	}
 

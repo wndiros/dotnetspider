@@ -29,10 +29,11 @@ namespace DotnetSpider.Sample
 			// await ProxySpider.RunAsync();
 			// await EntitySpider.RunMySqlQueueAsync();
 
-		   // await GithubSpider.RunAsync();
+			// await GithubSpider.RunAsync();
 			//await ImageSpider.RunAsync();
 			//await WNEntitySpider.RunAsync();
-			await WNSpringCatSpider.RunAsync();
+			//await WNSpringCatSpider.RunAsync();
+			await WNSpringCourseDataSpider.RunAsync();
 			//await WholeSiteSpider.RunAsync();
 			//await EntitySpider.RunAsync();
 			//await CnblogsSpider.RunAsync();
