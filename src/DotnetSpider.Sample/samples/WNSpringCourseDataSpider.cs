@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
-using Dapper;
 using DotnetSpider.DataFlow;
 using DotnetSpider.DataFlow.Parser;
 using DotnetSpider.DataFlow.Storage;
@@ -71,19 +71,19 @@ namespace DotnetSpider.Sample.samples
 			//// Print the assembly qualified name.
 			Console.WriteLine($"Assembly qualified name:\n   {objType.AssemblyQualifiedName}.");
 
-			WNSpringCatEntityStorage wnEntityStorage = (WNSpringCatEntityStorage) GetDefaultStorage();
+			WNSpringCatEntityStorage wnEntityStorage = (WNSpringCatEntityStorage)GetDefaultStorage();
 			AddDataFlow(new ProductsParser());
 			AddDataFlow(wnEntityStorage);
 
 			//
 			// get Links from Database
 			//
-			IEnumerable<dynamic> results = await  wnEntityStorage.GetData("select * from Categories");
+			IEnumerable<dynamic> results = await wnEntityStorage.GetData("select * from Categories where level = 2");
 
 			var i = 0;
 			foreach (var row in results)
 			{
-							
+
 				await AddRequestsAsync(
 					new Request(row.url, new Dictionary<string, object> { { "website", "Springest" } })
 					//new Request(row.url)
@@ -95,7 +95,7 @@ namespace DotnetSpider.Sample.samples
 				}
 
 			}
-			
+
 		}
 
 		protected override SpiderId GenerateSpiderId()
@@ -120,7 +120,7 @@ namespace DotnetSpider.Sample.samples
 			//	//Not necessary as unique records can be enforced by an unique index in the DB table
 			//	//the definition of the index can be done in the custom entity Class
 			//	_wnEntityStorage =  entityStorage;
-				
+
 
 
 			//}
@@ -155,98 +155,127 @@ namespace DotnetSpider.Sample.samples
 				List<ProductEntity> results = new List<ProductEntity>();
 				var typeName = typeof(ProductEntity).FullName;
 				var count = 1;
+				//string urlfilter = ".//*[@class='as-h3 product-item__title']/a/@href"; 
+				string urlfilter = ".//*[@class='breadcrumb__item lvl-1 list - item breadcrumb__item--current current']/a/@href";
+				string titlefilter = ".//*[@class='content__title product__title']/text()";
+				string maincatfilter = "//*[@class='breadcrumb__item lvl-3 list-item ']/a/span/text()";
+				string subcatfilter = "//*[@class='breadcrumb__item lvl-2 list-item ']/a/span/text()";
+				string subcatfilter1 = "//*[@class='breadcrumb__item lvl-1 list-item breadcrumb__item--current current']/.//span/text()";
+				//string descritiptionfilter = "string(//*[@class='product__description'])";
+				string descritiptionfilter = "//*[@class='product__description']";
+				string pagingfilter = "//li[@class='pagination__item hide-on-small']";
+				string productfilter = "//*[@class='pagination__item hide-on-small']/a/@href";
+				//string trainingidfilter = "string(.//*[@class='content content--medium aligned-right']/@ID)";
+				string trainingidfilter = ".//*[@class='content content--medium aligned-right']/@ID";
+				string pricefilter= "//*[contains(@class, 'detail-price')]/*[contains(@class, 'total')]/text()";
 
-				var catList = context.Selectable.SelectList(Selectors.XPath(".//li[@class='category-list__item']"));
-				string urlfilter = "//a[@class='category-list__title-link']/@href";
-				string titlefilter = ".//a[@class='category-list__title-link']//text()";
-				string maincatfilter = ".//li[@class='breadcrumb__item lvl-1 list-item breadcrumb__item--current current']/a/span[@itemprop='title']/text()";
+
 				int level = 1;
 
-				if (catList == null)
+				//"//*[@class='ajax-wrapper']" +
+				//"//*[@class='result-list']/*[@class='result-item product-item']//*[@class='as-h3 product-item__title']/a/@href" +
+				//" | " +
+				//"//li[@class='pagination__item hide-on-small']//a/@href"))
+				var prodList = context.Selectable.SelectList(Selectors.XPath("" +
+					"//*[@class='as-h3 product-item__title']/a/@href" +
+					"|" +
+					"//li[@class='pagination__item hide-on-small']//a/@href"));
+
+				//	" | //*[@class='breadcrumb__item lvl-1 list-item has-dropdown'] /a/span/text()";
+
+				if (prodList == null)
 				{
-					var catList2 = context.Selectable.SelectList(Selectors.XPath(".//li[@class='subject-title subject-list__item']"));
-					if (catList2 == null)
-					{
-						var catList3 = context.Selectable.SelectList(Selectors.XPath(".//li[@class='result-item product-item']"));
-						catList = catList3;
-						urlfilter = ".//h2[@class='as-h3 product-item__title']/a/@href";
-						titlefilter = ".//h2[@class='as-h3 product-item__title']/a/@title";
-						maincatfilter = ".//li[@class='breadcrumb__item lvl-3 list-item']/a[@class='breadcrumb__link nav-link']/span[@itemprop='title']/text()";
-						level = 3;
-					}
-					else
-					{
-						catList = catList2;
-						urlfilter = "//a[@class='subject-list__link']/@href";
-						titlefilter = "//a[@class='subject-list__link']/span/text()";
-						maincatfilter = "//li[@class='breadcrumb__item lvl-1 list-item breadcrumb__item--current current']/a/*[@itemprop='title']/text()";
-						//maincatfilter = "//li[@class='breadcrumb__item lvl-1 list-item breadcrumb__item--current current']/a/span/text()";
-						//breadcrumb__item lvl-1 list-item breadcrumb__item--current current
-						////breadcrumb__link nav-link 
-						level = 2;
-					}
+					//
+					// If prodlist == null we are on the level 2, the level of a specific seminar (learning product).
+					//				
+
+					var productdata = context.Selectable.Select(Selectors.XPath("//*[@class='content content--medium aligned-right']"));
+					level = 3;
+
+					urlfilter = "//*[@class='breadcrumb__item lvl-1 list-item breadcrumb__item--current current']/a/@href";
+					level = 2;
+
 				}
 
-				if (catList != null)
+				//
+				// If prodlist != null we are on our level 1 the level of a list with seminars and pagination-links.
+				// We extract the links to the products and the next page links
+				//
+				if (prodList != null)
 				{
 
-					foreach (var category in catList)
+					foreach (var category in prodList)
 					{
-						var url = category.Select(Selectors.XPath(urlfilter))?.Value;
-						var title = category.Select(Selectors.XPath(titlefilter))?.Value;
-						var maincategory = context.Selectable.Select(Selectors.XPath(maincatfilter))?.Value;
-						//var subcategory = context.Selectable.Select(Selectors.XPath(subcatfilter))?.Value;
-
-
-
+						//var url = category.Select(Selectors.XPath(urlfilter))?.Value;
+						var url = category.Value;
 						//category.Select(Selectors.XPath(maincatfilter))?.Value;
 						if (!string.IsNullOrWhiteSpace(url))
 						{
 							if (level == 1)
 							{
-
-
 								var request = context.CreateNewRequest(new Uri(url));
+
 								request.Properties.Add("url", url);
-								request.Properties.Add("page_title", title);
-								request.Properties.Add("maincategory", maincategory);
-								request.Properties.Add("level", level);
 
 								context.AddFollowRequests(request);
-							}
+								
 
-							results.Add(new ProductEntity
-							{
-								url = url,
-								product_title = title,
-								//maincategory = Int32.Parse(context.Request.Properties["maincategory"]?.ToString()?.Trim()),
-								maincategory = maincategory,
-								//subcategory = subcategory,
-								created_at = DateTime.Now,
-								visited_at = DateTime.Now,								
-							});
-
+								continue;
+							};
 
 							count++;
 
-							//results.Add(request);
-							//		//AddFollowRequestQuerier(Selectors.XPath(".//div[@class='pager']"));
-							//if (count > 20)
-							//{
-							//	break;
-							//}
 						}
-
-
-
 					}
-					AddParsedResult(context, results);
-					//context.AddData(typeName,CatList);
+
+
+					//var paginglist = context.Selectable.SelectList(Selectors.XPath(pagingfilter));
+
+					//if (paginglist != null)
+					//{
+					//	foreach (var page in paginglist)
+					//	{
+					//		var url = page.Select(Selectors.XPath("//li[@class='pagination__item hide-on-small']//a/@href"))?.Value;
+					//		var request = context.CreateNewRequest(new Uri(url));
+					//		request.Properties.Add("url", url);
+					//		context.AddFollowRequests(request);
+					//		continue;
+					//	}
+					//}					
 
 				}
 
-				//context.AddFollowRequests(results);
+				if (level == 2)
+				{
 
+					//var productdata = context.Selectable.Select(Selectors.XPath(productfilter));
+					var url = context.Selectable.Select(Selectors.XPath(urlfilter))?.Value;
+					var title = context.Selectable.Select(Selectors.XPath(titlefilter))?.Value;
+					var maincategory = context.Selectable.Select(Selectors.XPath(maincatfilter))?.Value;
+					var subcategory = context.Selectable.Select(Selectors.XPath(subcatfilter))?.Value;
+					var subcategory1 = context.Selectable.Select(Selectors.XPath(subcatfilter1))?.Value;
+					var description = context.Selectable.Select(Selectors.XPath(descritiptionfilter))?.Value;
+					var trainingid = context.Selectable.Select(Selectors.XPath(trainingidfilter))?.Value;
+					var price = context.Selectable.Select(Selectors.XPath(pricefilter))?.Value;
+
+					results.Add(new ProductEntity
+					{
+						url = url,
+						product_title = title,
+						trainingid = trainingid,
+						price = price,
+						//maincategory = Int32.Parse(context.Request.Properties["maincategory"]?.ToString()?.Trim()),
+						maincategory = maincategory,
+						subcategory = subcategory,
+						subcategory1 = subcategory1,
+						created_at = DateTime.Now,
+						visited_at = DateTime.Now,
+						description = description
+
+					});
+
+					AddParsedResult(context, results);
+				}
 
 
 				return Task.CompletedTask;
@@ -294,7 +323,7 @@ namespace DotnetSpider.Sample.samples
 		{
 			protected override void Configure()
 			{
-				HasIndex(x => x.url, true);
+				//HasIndex(x => x.url, false);
 				//HasIndex(x => new { x.WebSite, x.Guid }, true);
 			}
 			//
@@ -304,18 +333,22 @@ namespace DotnetSpider.Sample.samples
 			///
 
 			public int Id { get; set; }
-			public string trainingId { get; set; }
-			public string url { get; set; }			
+			public string trainingid { get; set; }
+			public string url { get; set; }
 			public string maincategory { get; set; }
 			public string subcategory { get; set; }
+			public string subcategory1 { get; set; }
+			public string subcategory2 { get; set; }
 			public string product_title { get; set; }
+
+			[StringLength(8192)]
 			public string description { get; set; }
-			public double price { get; set; }
+			public string price { get; set; }
 			public string rating { get; set; }
 			public string maxparticipants { get; set; }
 			public DateTime created_at { get; set; }
 			public DateTime visited_at { get; set; }
-			
+
 		}
 	}
 

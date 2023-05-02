@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="samples\WNCategorySpider.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DotnetSpider.HBase\DotnetSpider.HBase.csproj" />
     <ProjectReference Include="..\DotnetSpider.Mongo\DotnetSpider.Mongo.csproj" />
     <ProjectReference Include="..\DotnetSpider.MySql\DotnetSpider.MySql.csproj" />

@@ -26,7 +26,6 @@ namespace DotnetSpider.DataFlow
 		{
 			if (IsNullOrEmpty(context))
 			{
-				//Logger.LogWarning("数据流上下文不包含解析结果");
 				Logger.LogWarning("The data flow context does not contain the analysis result");
 				return Task.CompletedTask;
 			}
