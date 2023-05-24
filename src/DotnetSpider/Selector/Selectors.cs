@@ -3,22 +3,22 @@ using System.Text.RegularExpressions;
 
 namespace DotnetSpider.Selector
 {
-    /// <summary>
-    /// 查询器的构建帮助类, 相同的查询器会缓存起来.
-    /// </summary>
-    public class Selectors
+	/// <summary>
+	/// Query builder helper class, where identical queryers are cached.
+	/// </summary>
+	public class Selectors
     {
         private static readonly ConcurrentDictionary<string, ISelector> Cache =
             new();
 
-        /// <summary>
-        /// 创建正则查询器
-        /// </summary>
-        /// <param name="expr">正则表达式</param>
-        /// <param name="options"></param>
-        /// <param name="group"></param>
-        /// <returns>查询器</returns>
-        public static ISelector Regex(string expr,
+		/// <summary>
+		/// Creating a regular queryer
+		/// </summary>
+		/// <param name="expr">正则表达式</param>
+		/// <param name="options"></param>
+		/// <param name="group"></param>
+		/// <returns>查询器</returns>
+		public static ISelector Regex(string expr,
             RegexOptions options = RegexOptions.None, string replacement = "$0")
         {
             var key = $"r_{expr}_{replacement}";
