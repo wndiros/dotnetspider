@@ -35,6 +35,8 @@ namespace DotnetSpider.DataFlow.Storage
 		protected const string LongType = "Int64";
 		protected const string ByteType = "Byte";
 		protected const string ShortType = "Short";
+		protected const string BlobType = "Byte[]";
+
 
 		/// <summary>
 		/// Create database connection interface

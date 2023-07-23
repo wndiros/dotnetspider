@@ -33,7 +33,8 @@ namespace DotnetSpider.Sample
 			//await ImageSpider.RunAsync();
 			//await WNEntitySpider.RunAsync();
 			//await WNSpringCatSpider.RunAsync();
-			await WNSpringCourseDataSpider.RunAsync();
+			//await WNSpringCourseDataSpider.RunAsync();
+			await WNSpringCourseProviderImageSpider.RunAsync();
 			//await WholeSiteSpider.RunAsync();
 			//await EntitySpider.RunAsync();
 			//await CnblogsSpider.RunAsync();

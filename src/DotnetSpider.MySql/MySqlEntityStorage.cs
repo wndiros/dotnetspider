@@ -312,6 +312,11 @@ namespace DotnetSpider.MySql
 					dataType = "INT";
 					break;
 				}
+				case BlobType:
+					{
+						dataType = "LONGBLOB";
+						break;
+					}
 				default:
 				{
 					dataType = length <= 0 || length > 8000 ? "LONGTEXT" : $"VARCHAR({length})";
